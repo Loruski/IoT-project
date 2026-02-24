@@ -1,0 +1,196 @@
+# Use root/example as user/password credentials
+configs:
+  system_config:
+    file: ./config.json
+  
+# volumes:
+#   smart-bus-volume:
+#   driver: local 
+#   driver_opts: 
+#     o: 
+#       bind type: none
+#       device: /path/to/files/on/host
+
+    
+networks:
+  smart-bus-system-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/16
+
+
+services:
+
+  bus-sensors:
+    build: ./bus-sensors
+    volumes:
+      - ./config.json:/etc/data/config.json
+    networks:
+      smart-bus-system-network:
+        ipv4_address: 10.0.0.10
+
+  stop-sensors:
+    build: ./stop-sensors
+    volumes:
+      - ./config.json:/etc/data/config.json
+    networks:
+      smart-bus-system-network:
+        ipv4_address: 10.0.0.11
+
+  mosquitto:
+    container_name: se4iot-mosquitto
+    image: eclipse-mosquitto
+    volumes:
+    - ./mosquitto/config:/mosquitto/config
+    - ./mosquitto/log:/mosquitto/log
+    - ./mosquitto/data/:/mosquitto/data
+    restart: always
+    networks:
+      smart-bus-system-network:
+        ipv4_address: 10.0.0.20
+    ports:
+    - "1883:1883" 
+
+  
+  # db:
+  #   image: mysql
+  #   container_name: se4iot-mysql
+  #   # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+  #   # (this is just an example, not intended to be a production configuration)
+  #   #command: --default-authentication-plugin=mysql_native_password --initialize-insecure
+  #   restart: always
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: admin
+  #   ports:
+  #   - "3306:3306" 
+  #   volumes:
+  #   - ./mysql-dump:/docker-entrypoint-initdb.d
+  #   #- ./mysql-data:/var/lib/mysql
+
+
+  # adminer:
+  #   image: adminer
+  #   container_name: se4iot-mysql-adminer
+  #   restart: always
+  #   ports:
+  #     - "8080:8080"
+  #   networks:
+  #     - se4iot-net
+
+  node-red:
+    container_name: node-red
+    # build:
+    #   context: ./nodered-custom/
+    #   dockerfile: Dockerfile
+    image: nodered:latest
+    environment:
+      - TZ=Europe/Rome
+      - MYSQLUSERNAME=root
+      - MYSQLPASSWORD=example
+    ports:
+      - "1880:1880"
+    networks:
+      smart-bus-system-network:
+        ipv4_address: 10.0.0.30
+    volumes:
+      - ./nodered/data:/data
+      - ./config.json:/system_data/config.json
+
+
+  
+
+  influxdb:
+    container_name: se4iot-influxdb
+    image: influxdb:2.7.4
+    ports:
+      - 8086:8086
+    volumes:
+      - ./influxdb/data:/var/lib/influxdb2
+      - ./influxdb/config:/etc/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=admin
+      - DOCKER_INFLUXDB_INIT_ORG=univaq
+      - DOCKER_INFLUXDB_INIT_BUCKET=se4iot
+      - DOCKER_INFLUXDB_INIT_RETENTION=1w
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=Ga8nVsXP4FAe5_M1a5j7uCa4zO_u_M9oUsO8wUSWh_wPbR3clc9ZTv420Li9adOVCPl1tGvn6hLHfI5gP7Lm5A== #TODO inserire token
+    networks:
+      smart-bus-system-network:
+        ipv4_address: 10.0.0.40
+
+
+  telegraf:
+    image: telegraf:latest
+    container_name: telegraf
+    depends_on:
+      - influxdb
+    restart: unless-stopped
+    volumes:
+      - ./telegraf/mqtt2se4iot-bucket.conf:/etc/telegraf/telegraf.conf:ro #TODO inserire bucket
+    #  - ./telegraf/proc:/host/proc:ro
+    #  - ./telegraf/sys:/host/sys:ro
+    #  - ./telegraf/etc:/host/etc:ro
+    environment:
+      - INFLUX_TOKEN=Dbk93El3g4Eyp6otRqk-d3WljGn1zaxpxw1jkQAWCvPdj-dxrxZuTqElEP003v7PeKQMYzzFMki20qGeSvtCgQ== # TODO inserire token
+    #   - HOST_PROC=/host/proc
+    #   - HOST_SYS=/host/sys
+    #   - HOST_ETC=/host/etc
+
+
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+  #   container_name: se4iot-rabbitmq
+  #   ports:
+  #     - "5672:5672"    # Port for RabbitMQ client connections
+  #     - "15672:15672"  # Port for RabbitMQ management UI
+  #   environment:
+  #     RABBITMQ_DEFAULT_USER: guest
+  #     RABBITMQ_DEFAULT_PASS: guest
+  #   networks:
+  #     se4iot-network:
+  #       ipv4_address: 10.0.0.105
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: always
+    depends_on:
+      - influxdb
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=
+    links:
+      - influxdb
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./grafana:/var/lib/grafana
+    networks:
+      smart-bus-system-network:
+        ipv4_address: 10.0.0.50
+
+  # openfire:
+  #   container_name: se4iot-openfire
+  #   build:
+  #     context: ./openfire/
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "9090:9090"
+  #     - "9091:9091"
+  #     - "5222:5222"
+  #     - "5269:5269"
+  #   networks:
+  #     se4iot-network:
+  #       ipv4_address: 10.0.0.106
+  #   volumes:
+  #     - ./openfire/data/conf:/opt/openfire/conf
+  # #    - ./openfire/data/logs:/opt/openfire/logs
+  #     - ./openfire/data/embedded-db:/opt/openfire/embedded-db
+  #     - ./openfire/data/resources:/opt/openfire/resources
+  # #    - ./openfire/data/plugins:/opt/openfire/plugins
+  #   hostname: localhost 
+  #   restart: unless-stopped
+

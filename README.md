@@ -1,1 +1,40 @@
 # IoT-project
+todolist:
+    sensors:
+        in bus:
+            temperature
+            people in a bus
+            current stop
+            delay
+            bus speed
+            faults
+
+            path is modeled by a set of stops
+            bus current stop is determined by scrolling his path set
+            
+            each second the bus sensor has a probability of advancing to the next stop
+            speed is influenced by faults
+            delay is influenced by speed
+            probability is influenced by delay
+            
+        in city:
+            people on a stop
+            rain on a stop
+            temperature on a stop
+
+            each stop has a set amount of buses
+
+containers list:
+    Python file bus sensors
+    Python file stop sensors
+    MQTT Mosquitto
+    NodeRED processer
+    inFluxDB
+    Grafana Dashboard
+
+Dashboards:
+ - One for show the map with the entire map
+ - One for see The list of buses and Stops
+ - One for the admin to see the state and faults of the buses
+
+Global JSON configuration file used for adding/removing buses/stops, configuring sensor thresholds, what data to visualize
