@@ -22,24 +22,16 @@ networks:
 
 services:
 
-  bus-sensors:
-    build: ./bus-sensors
+  sensors:
+    build: ./sensors
     volumes:
-      - ./config.json:/etc/data/config.json
+      - ./config.json:./config.json
     networks:
       smart-bus-system-network:
         ipv4_address: 10.0.0.10
 
-  stop-sensors:
-    build: ./stop-sensors
-    volumes:
-      - ./config.json:/etc/data/config.json
-    networks:
-      smart-bus-system-network:
-        ipv4_address: 10.0.0.11
-
   mosquitto:
-    container_name: se4iot-mosquitto
+    container_name: smart-bus-system-mosquitto
     image: eclipse-mosquitto
     volumes:
     - ./mosquitto/config:/mosquitto/config
@@ -101,7 +93,7 @@ services:
   
 
   influxdb:
-    container_name: se4iot-influxdb
+    container_name: smart-bus-system-influxdb
     image: influxdb:2.7.4
     ports:
       - 8086:8086
@@ -113,7 +105,7 @@ services:
       - DOCKER_INFLUXDB_INIT_USERNAME=admin
       - DOCKER_INFLUXDB_INIT_PASSWORD=admin
       - DOCKER_INFLUXDB_INIT_ORG=univaq
-      - DOCKER_INFLUXDB_INIT_BUCKET=se4iot
+      - DOCKER_INFLUXDB_INIT_BUCKET=smart-bus-system
       - DOCKER_INFLUXDB_INIT_RETENTION=1w
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=Ga8nVsXP4FAe5_M1a5j7uCa4zO_u_M9oUsO8wUSWh_wPbR3clc9ZTv420Li9adOVCPl1tGvn6hLHfI5gP7Lm5A== #TODO inserire token
     networks:
@@ -128,7 +120,7 @@ services:
       - influxdb
     restart: unless-stopped
     volumes:
-      - ./telegraf/mqtt2se4iot-bucket.conf:/etc/telegraf/telegraf.conf:ro #TODO inserire bucket
+      - ./telegraf/smart-bus-system-bucket.conf:/etc/telegraf/telegraf.conf:ro #TODO inserire bucket
     #  - ./telegraf/proc:/host/proc:ro
     #  - ./telegraf/sys:/host/sys:ro
     #  - ./telegraf/etc:/host/etc:ro
@@ -193,4 +185,3 @@ services:
   # #    - ./openfire/data/plugins:/opt/openfire/plugins
   #   hostname: localhost 
   #   restart: unless-stopped
-
