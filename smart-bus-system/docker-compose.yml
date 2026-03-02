@@ -25,7 +25,7 @@ services:
   sensors:
     build: ./sensors
     volumes:
-      - ./config.json:./config.json
+      - ./config.json:/config.json
     networks:
       smart-bus-system-network:
         ipv4_address: 10.0.0.10
@@ -75,7 +75,7 @@ services:
     # build:
     #   context: ./nodered-custom/
     #   dockerfile: Dockerfile
-    image: nodered:latest
+    image: nodered/node-red:latest
     environment:
       - TZ=Europe/Rome
       - MYSQLUSERNAME=root
@@ -119,8 +119,8 @@ services:
     depends_on:
       - influxdb
     restart: unless-stopped
-    volumes:
-      - ./telegraf/smart-bus-system-bucket.conf:/etc/telegraf/telegraf.conf:ro #TODO inserire bucket
+    # volumes:
+      # - ./telegraf/smart-bus-system-bucket.conf:/etc/telegraf/telegraf.conf:ro #TODO inserire bucket
     #  - ./telegraf/proc:/host/proc:ro
     #  - ./telegraf/sys:/host/sys:ro
     #  - ./telegraf/etc:/host/etc:ro
@@ -153,7 +153,7 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_INSTALL_PLUGINS=
+      - GF_INSTALL_PLUGINS=volkovlabs-form-panel
     links:
       - influxdb
     ports:

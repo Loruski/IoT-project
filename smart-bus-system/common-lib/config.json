@@ -1,0 +1,10 @@
+{
+  "city_params": { "rain_factor": 1.2, "global_temp": 22 },
+  "buses": [
+    { "id": "B1", "route": ["Stop1", "Stop2", "Stop3"], "capacity": 50 },
+    { "id": "B2", "route": ["Stop3", "Stop4", "Stop1"], "capacity": 40 }
+  ],
+  "stops": [
+    { "id": "Stop1", "lat": 45.46, "lon": 9.18, "name": "Duomo" }
+  ]
+}
