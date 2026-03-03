@@ -11,9 +11,6 @@ configs:
 #       bind type: none
 #       device: /path/to/files/on/host
 
-  
-
-
 
 networks:
   smart-bus-system-network:
@@ -30,8 +27,8 @@ services:
     volumes:
       - ./config.json:/config.json
     environment:
-      - USERNAME=${USERNAME}
-      - PASSWORD=${PASSWORD}
+      - IOT_USERNAME=${IOT_USERNAME}
+      - IOT_PASSWORD=${IOT_PASSWORD}
     container_name: smart-bus-system-sensors
     networks:
       smart-bus-system-network:
@@ -39,10 +36,17 @@ services:
 
   mosquitto:
     container_name: smart-bus-system-mosquitto
-    image: giacomix02/iot_mosquitto:v1
-    # build: ./mosquitto
+    # image: giacomix02/iot_mosquitto:v1
+    build:
+      context: ./mosquitto
+      args:
+        - IOT_USERNAME=${IOT_USERNAME}
+        - IOT_PASSWORD=${IOT_PASSWORD}
+    environment:
+      - IOT_USERNAME=${IOT_USERNAME}
+      - IOT_PASSWORD=${IOT_PASSWORD}
     volumes:
-    - ./mosquitto/config/mosquitto.passwd:/mosquitto/config/mosquitto.passwd
+    # - ./mosquitto/config/mosquitto.passwd:/mosquitto/config/mosquitto.passwd
     - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
     - ./mosquitto/log:/mosquitto/log
     - ./mosquitto/data/:/mosquitto/data
@@ -111,8 +115,8 @@ services:
       - ./influxdb/config:/etc/influxdb2
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_USERNAME=${USERNAME}
-      - DOCKER_INFLUXDB_INIT_PASSWORD=${PASSWORD}
+      - DOCKER_INFLUXDB_INIT_USERNAME=${IOT_USERNAME}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${IOT_PASSWORD}
       - DOCKER_INFLUXDB_INIT_ORG=univaq
       - DOCKER_INFLUXDB_INIT_BUCKET=smart-bus-system
       - DOCKER_INFLUXDB_INIT_RETENTION=1w

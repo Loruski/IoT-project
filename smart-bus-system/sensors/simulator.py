@@ -10,8 +10,8 @@ import random
 
 # Load environment variables
 load_dotenv()
-ADMIN_USERNAME = os.getenv("USERNAME")
-ADMIN_PASSWORD = os.getenv("PASSWORD")
+ADMIN_USERNAME = os.getenv("IOT_USERNAME")
+ADMIN_PASSWORD = os.getenv("IOT_PASSWORD")
 
 BROKER_IP = "10.0.0.20"
 
