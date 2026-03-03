@@ -13,7 +13,10 @@ load_dotenv()
 ADMIN_USERNAME = os.getenv("USERNAME")
 ADMIN_PASSWORD = os.getenv("PASSWORD")
 
-BROKER_IP = "10.0.0.20"
+print("Admin username:", ADMIN_USERNAME)
+print("Admin password:", ADMIN_PASSWORD)
+
+BROKER_IP = "20.0.0.20"
 
 # Topics
 BUS = "bus"
@@ -30,8 +33,11 @@ CURRENT_CAPACITY = "current_capacity"
 STATUS = "status"
 
 # Topic structure:
-# For stops: stop/{stop_id}/{sensor_type}/{value}
-# For buses: bus/{bus_id}/{sensor_type}/{value}
+# For stops: stop/{stop_id}/{sensor_type}/value
+#            stop/{stop_id}/{sensor_type}/timestamp
+# For buses: bus/{bus_id}/{sensor_type}/value
+#            bus/{bus_id}/{sensor_type}/timestamp
+
 
 
  
@@ -130,13 +136,13 @@ if __name__ == "__main__":
             stop.people = dice_roll_people_at_stop(stop.rain, stop.temp, stop.people)
 
             # Publish stop data to MQTT
-            mqttc.publish(f"{STOP}/{stop.id}/{TEMP}/value", stop.temp)
-            mqttc.publish(f"{STOP}/{stop.id}/{TEMP}/timestamp", time.time())
+            mqttc.publish(f"{STOP}/{stop.id}/{TEMP}/stop_value", stop.temp)
+            mqttc.publish(f"{STOP}/{stop.id}/{TEMP}/stop_timestamp", time.time())
 
-            mqttc.publish(f"{STOP}/{stop.id}/{RAIN}/value", stop.rain)
-            mqttc.publish(f"{STOP}/{stop.id}/{RAIN}/timestamp", time.time())
+            mqttc.publish(f"{STOP}/{stop.id}/{RAIN}/stop_value", stop.rain)
+            mqttc.publish(f"{STOP}/{stop.id}/{RAIN}/stop_timestamp", time.time())
 
-            mqttc.publish(f"{STOP}/{stop.id}/{PEOPLE}/value", stop.people)
+            mqttc.publish(f"{STOP}/{stop.id}/{PEOPLE}/stop_value", stop.people)
             mqttc.publish(f"{STOP}/{stop.id}/{PEOPLE}/timestamp", time.time())
             # --- 
 
@@ -152,8 +158,8 @@ if __name__ == "__main__":
                     bus.currentStop = bus.route[bus.route.index(bus.currentStop) + 1]
             
             # Publish bus data to MQTT
-            mqttc.publish(f"{BUS}/{bus.id}/{CURRENT_STOP}/value", bus.currentStop.id)
-            mqttc.publish(f"{BUS}/{bus.id}/{CURRENT_STOP}/timestamp", time.time())
+            mqttc.publish(f"{BUS}/{bus.id}/{CURRENT_STOP}/bus_value", bus.currentStop.id)
+            mqttc.publish(f"{BUS}/{bus.id}/{CURRENT_STOP}/bus_timestamp", time.time())
                         # ---
             print(bus.id, bus.currentStop.name)
         

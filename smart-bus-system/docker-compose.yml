@@ -20,7 +20,7 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 10.0.0.0/8
+        - subnet: 20.0.0.0/8
 
 
 services:
@@ -30,12 +30,12 @@ services:
     volumes:
       - ./config.json:/config.json
     environment:
-      - USERNAME=${USERNAME}
-      - PASSWORD=${PASSWORD}
+      - USERNAME=${IOT_USERNAME}
+      - PASSWORD=${IOT_PASSWORD}
     container_name: smart-bus-system-sensors
     networks:
       smart-bus-system-network:
-        ipv4_address: 10.0.0.10
+        ipv4_address: 20.0.0.10
 
   mosquitto:
     container_name: smart-bus-system-mosquitto
@@ -49,7 +49,7 @@ services:
     restart: always
     networks:
       smart-bus-system-network:
-        ipv4_address: 10.0.0.20
+        ipv4_address: 20.0.0.20
     ports:
       - 1883:1883
 
@@ -93,7 +93,7 @@ services:
       - "1880:1880"
     networks:
       smart-bus-system-network:
-        ipv4_address: 10.0.0.30
+        ipv4_address: 20.0.0.30
     volumes:
       - ./nodered/data:/data
       - ./config.json:/system_data/config.json
@@ -111,15 +111,15 @@ services:
       - ./influxdb/config:/etc/influxdb2
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_USERNAME=${USERNAME}
-      - DOCKER_INFLUXDB_INIT_PASSWORD=${PASSWORD}
+      - DOCKER_INFLUXDB_INIT_USERNAME=${IOT_USERNAME}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${IOT_PASSWORD}
       - DOCKER_INFLUXDB_INIT_ORG=univaq
       - DOCKER_INFLUXDB_INIT_BUCKET=smart-bus-system
       - DOCKER_INFLUXDB_INIT_RETENTION=1w
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=Ga8nVsXP4FAe5_M1a5j7uCa4zO_u_M9oUsO8wUSWh_wPbR3clc9ZTv420Li9adOVCPl1tGvn6hLHfI5gP7Lm5A== #TODO inserire token
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=apjbchV0DxiMqyLFGxZPrNe1BtsRCKyfrAKGWjG5tngI0LwvCsKPMrL7UNZxLtliljCvHqJaueMMqULQ7yt1Zw==
     networks:
       smart-bus-system-network:
-        ipv4_address: 10.0.0.40
+        ipv4_address: 20.0.0.40
 
 
   telegraf:
@@ -129,15 +129,18 @@ services:
       - influxdb
     restart: unless-stopped
     volumes:
-      - ./telegraf/smart-bus-system-bucket.conf:/etc/telegraf/telegraf.conf:ro #TODO inserire bucket
+      - ./telegraf/smart-bus-system-bucket.conf:/etc/telegraf/telegraf.conf:ro
       - ./telegraf/proc:/host/proc:ro
       - ./telegraf/sys:/host/sys:ro
       - ./telegraf/etc:/host/etc:ro
     environment:
-      - INFLUX_TOKEN=Dbk93El3g4Eyp6otRqk-d3WljGn1zaxpxw1jkQAWCvPdj-dxrxZuTqElEP003v7PeKQMYzzFMki20qGeSvtCgQ== # TODO inserire token
+      - INFLUX_TOKEN=3Lhhog5TvBby3ryK1-zqTXMHhyUJaKF-TOaA0z-v0le717QHsxFfCwT6m683syfa1EhvZP006EuEfJW_NlYNFw==
       - HOST_PROC=/host/proc
       - HOST_SYS=/host/sys
       - HOST_ETC=/host/etc
+    networks:
+      smart-bus-system-network:
+        ipv4_address: 20.0.0.60
 
 
   # rabbitmq:
@@ -171,7 +174,7 @@ services:
       - ./grafana:/var/lib/grafana
     networks:
       smart-bus-system-network:
-        ipv4_address: 10.0.0.50
+        ipv4_address: 20.0.0.50
 
   # openfire:
   #   container_name: se4iot-openfire
