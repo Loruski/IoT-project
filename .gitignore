@@ -1,3 +1,6 @@
 smart-bus-system/grafana/
 smart-bus-system/influxdb/data
 smart-bus-system/nodered/data
+secrets
+smart-bus-system/mosquitto/config/mosquitto.passwd
+smart-bus-system/mosquitto/data

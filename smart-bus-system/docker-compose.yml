@@ -34,7 +34,8 @@ services:
     container_name: smart-bus-system-mosquitto
     image: eclipse-mosquitto
     volumes:
-    - ./mosquitto/config:/mosquitto/config
+    - ./mosquitto/config/mosquitto.passwd:/mosquitto/config/mosquitto.passwd:rw
+    - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
     - ./mosquitto/log:/mosquitto/log
     - ./mosquitto/data/:/mosquitto/data
     restart: always
@@ -42,7 +43,7 @@ services:
       smart-bus-system-network:
         ipv4_address: 10.0.0.20
     ports:
-    - "1883:1883" 
+      - 1883:1883
 
   
   # db:
