@@ -11,9 +11,6 @@ configs:
 #       bind type: none
 #       device: /path/to/files/on/host
 
-  
-
-
 
 networks:
   smart-bus-system-network:
@@ -39,10 +36,17 @@ services:
 
   mosquitto:
     container_name: smart-bus-system-mosquitto
-    image: giacomix02/iot_mosquitto:v1
-    # build: ./mosquitto
+    # image: giacomix02/iot_mosquitto:v1
+    build:
+      context: ./mosquitto
+      args:
+        - IOT_USERNAME=${IOT_USERNAME}
+        - IOT_PASSWORD=${IOT_PASSWORD}
+    environment:
+      - IOT_USERNAME=${IOT_USERNAME}
+      - IOT_PASSWORD=${IOT_PASSWORD}
     volumes:
-    - ./mosquitto/config/mosquitto.passwd:/mosquitto/config/mosquitto.passwd
+    # - ./mosquitto/config/mosquitto.passwd:/mosquitto/config/mosquitto.passwd
     - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
     - ./mosquitto/log:/mosquitto/log
     - ./mosquitto/data/:/mosquitto/data
