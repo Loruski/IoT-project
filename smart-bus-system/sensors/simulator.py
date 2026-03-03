@@ -104,7 +104,7 @@ def dice_roll_people_at_stop(rain_factor, global_temp, current_people=-1):
 if __name__ == "__main__":
 
     mqttc = mqtt.Client(client_id="",clean_session=True,userdata=None,protocol=mqtt.MQTTv311,transport="tcp")
-    mqttc.username_pw_set(username="admin",password="admin")
+    mqttc.username_pw_set(username=ADMIN_USERNAME,password=ADMIN_PASSWORD)
     print("MQTT is Connecting...")
     mqttc.connect("smart-bus-system-mosquitto", 1883, 60)
     mqttc.loop_start()

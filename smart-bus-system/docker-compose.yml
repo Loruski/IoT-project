@@ -105,7 +105,7 @@ services:
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=admin
-      - DOCKER_INFLUXDB_INIT_PASSWORD=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=admin123
       - DOCKER_INFLUXDB_INIT_ORG=univaq
       - DOCKER_INFLUXDB_INIT_BUCKET=smart-bus-system
       - DOCKER_INFLUXDB_INIT_RETENTION=1w
@@ -121,16 +121,16 @@ services:
     depends_on:
       - influxdb
     restart: unless-stopped
-    # volumes:
-      # - ./telegraf/smart-bus-system-bucket.conf:/etc/telegraf/telegraf.conf:ro #TODO inserire bucket
-    #  - ./telegraf/proc:/host/proc:ro
-    #  - ./telegraf/sys:/host/sys:ro
-    #  - ./telegraf/etc:/host/etc:ro
+    volumes:
+      - ./telegraf/smart-bus-system-bucket.conf:/etc/telegraf/telegraf.conf:ro #TODO inserire bucket
+      - ./telegraf/proc:/host/proc:ro
+      - ./telegraf/sys:/host/sys:ro
+      - ./telegraf/etc:/host/etc:ro
     environment:
       - INFLUX_TOKEN=Dbk93El3g4Eyp6otRqk-d3WljGn1zaxpxw1jkQAWCvPdj-dxrxZuTqElEP003v7PeKQMYzzFMki20qGeSvtCgQ== # TODO inserire token
-    #   - HOST_PROC=/host/proc
-    #   - HOST_SYS=/host/sys
-    #   - HOST_ETC=/host/etc
+      - HOST_PROC=/host/proc
+      - HOST_SYS=/host/sys
+      - HOST_ETC=/host/etc
 
 
   # rabbitmq:
