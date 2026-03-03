@@ -17,7 +17,7 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 10.0.0.0/16
+        - subnet: 20.0.0.0/16
 
 
 services:
@@ -28,7 +28,7 @@ services:
       - ./config.json:/config.json
     networks:
       smart-bus-system-network:
-        ipv4_address: 10.0.0.10
+        ipv4_address: 20.0.0.10
 
   mosquitto:
     container_name: smart-bus-system-mosquitto
@@ -42,7 +42,7 @@ services:
     restart: always
     networks:
       smart-bus-system-network:
-        ipv4_address: 10.0.0.20
+        ipv4_address: 20.0.0.20
     ports:
       - 1883:1883
 
@@ -86,7 +86,7 @@ services:
       - "1880:1880"
     networks:
       smart-bus-system-network:
-        ipv4_address: 10.0.0.30
+        ipv4_address: 20.0.0.30
     volumes:
       - ./nodered/data:/data
       - ./config.json:/system_data/config.json
@@ -112,7 +112,7 @@ services:
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=Ga8nVsXP4FAe5_M1a5j7uCa4zO_u_M9oUsO8wUSWh_wPbR3clc9ZTv420Li9adOVCPl1tGvn6hLHfI5gP7Lm5A== #TODO inserire token
     networks:
       smart-bus-system-network:
-        ipv4_address: 10.0.0.40
+        ipv4_address: 20.0.0.40
 
 
   telegraf:
@@ -144,7 +144,7 @@ services:
   #     RABBITMQ_DEFAULT_PASS: guest
   #   networks:
   #     se4iot-network:
-  #       ipv4_address: 10.0.0.105
+  #       ipv4_address: 20.0.0.105
 
   grafana:
     image: grafana/grafana
@@ -164,7 +164,7 @@ services:
       - ./grafana:/var/lib/grafana
     networks:
       smart-bus-system-network:
-        ipv4_address: 10.0.0.50
+        ipv4_address: 20.0.0.50
 
   # openfire:
   #   container_name: se4iot-openfire
@@ -178,7 +178,7 @@ services:
   #     - "5269:5269"
   #   networks:
   #     se4iot-network:
-  #       ipv4_address: 10.0.0.106
+  #       ipv4_address: 20.0.0.106
   #   volumes:
   #     - ./openfire/data/conf:/opt/openfire/conf
   # #    - ./openfire/data/logs:/opt/openfire/logs

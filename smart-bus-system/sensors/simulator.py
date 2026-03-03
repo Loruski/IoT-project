@@ -1,10 +1,36 @@
 
 import time
+import os
 import paho.mqtt.client as mqtt
 from classes import Bus, Stop, CityParams
+from dotenv import load_dotenv
 from configReader import read_buses_config, read_city_params, read_stop_config, reload_buses, reload_stops
 import configReader
 import random
+
+# Load environment variables
+load_dotenv()
+ADMIN_USERNAME = os.getenv("USERNAME")
+ADMIN_PASSWORD = os.getenv("PASSWORD")
+
+# Topics
+BUS = "bus"
+STOP = "stop"
+
+# Sensor types for stops
+TEMP = "temp"
+RAIN = "rain"
+PEOPLE = "people"
+
+# Sensor types for buses
+CURRENT_STOP = "current_stop"
+CURRENT_CAPACITY = "current_capacity"
+STATUS = "status"
+
+# Topic structure:
+# For stops: stop/{stop_id}/{sensor_type}/{value}
+# For buses: bus/{bus_id}/{sensor_type}/{value}
+
 
  
 def dice_roll_next_stop(global_temp, rain_factor):
@@ -76,6 +102,13 @@ def dice_roll_people_at_stop(rain_factor, global_temp, current_people=-1):
 
 
 if __name__ == "__main__":
+
+    mqttc = mqtt.Client(client_id="",clean_session=True,userdata=None,protocol=mqtt.MQTTv311,transport="tcp")
+    mqttc.username_pw_set(username="admin",password="admin")
+    print("MQTT is Connecting...")
+    mqttc.connect("smart-bus-system-mosquitto", 1883, 60)
+    mqttc.loop_start()
+
     configReader.initialize_system()
 
     buses: list[Bus] = read_buses_config()
@@ -94,6 +127,12 @@ if __name__ == "__main__":
             stop.rain = dice_roll_rain_at_stop(rain_factor, stop.rain)
             stop.people = dice_roll_people_at_stop(stop.rain, stop.temp, stop.people)
 
+            # Publish stop data to MQTT
+            mqttc.publish(f"{STOP}/{stop.id}/{TEMP}", stop.temp)
+            mqttc.publish(f"{STOP}/{stop.id}/{RAIN}", stop.rain)
+            mqttc.publish(f"{STOP}/{stop.id}/{PEOPLE}", stop.people)
+            # --- 
+
             print(stop.name, ":", stop.temp, stop.rain, stop.people)
 
         for bus in buses:
@@ -105,8 +144,12 @@ if __name__ == "__main__":
                 else:
                     bus.currentStop = bus.route[bus.route.index(bus.currentStop) + 1]
             
+            # Publish bus data to MQTT
+            mqttc.publish(f"{BUS}/{bus.id}/{CURRENT_STOP}", bus.currentStop.id)
+            # ---
             print(bus.id, bus.currentStop.name)
         
         time.sleep(1)
 
- 
+    mqttc.loop_stop()
+    mqttc.disconnect()
