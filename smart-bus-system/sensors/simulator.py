@@ -2,7 +2,7 @@
 import time
 import os
 import paho.mqtt.client as mqtt
-from classes import Bus, Stop, CityParams
+from classes import Bus, Stop 
 from dotenv import load_dotenv
 from configReader import read_buses_config, read_city_params, read_stop_config, reload_buses, reload_stops
 import configReader
@@ -12,6 +12,8 @@ import random
 load_dotenv()
 ADMIN_USERNAME = os.getenv("USERNAME")
 ADMIN_PASSWORD = os.getenv("PASSWORD")
+
+BROKER_IP = "10.0.0.20"
 
 # Topics
 BUS = "bus"
@@ -102,11 +104,11 @@ def dice_roll_people_at_stop(rain_factor, global_temp, current_people=-1):
 
 
 if __name__ == "__main__":
-
-    mqttc = mqtt.Client(client_id="",clean_session=True,userdata=None,protocol=mqtt.MQTTv311,transport="tcp")
+    mqttc = mqtt.Client(protocol=mqtt.MQTTv5)
+    
     mqttc.username_pw_set(username=ADMIN_USERNAME,password=ADMIN_PASSWORD)
     print("MQTT is Connecting...")
-    mqttc.connect("smart-bus-system-mosquitto", 1883, 60)
+    mqttc.connect(BROKER_IP, 1883, 60)
     mqttc.loop_start()
 
     configReader.initialize_system()
@@ -128,9 +130,14 @@ if __name__ == "__main__":
             stop.people = dice_roll_people_at_stop(stop.rain, stop.temp, stop.people)
 
             # Publish stop data to MQTT
-            mqttc.publish(f"{STOP}/{stop.id}/{TEMP}", stop.temp)
-            mqttc.publish(f"{STOP}/{stop.id}/{RAIN}", stop.rain)
-            mqttc.publish(f"{STOP}/{stop.id}/{PEOPLE}", stop.people)
+            mqttc.publish(f"{STOP}/{stop.id}/{TEMP}/value", stop.temp)
+            mqttc.publish(f"{STOP}/{stop.id}/{TEMP}/timestamp", time.time())
+
+            mqttc.publish(f"{STOP}/{stop.id}/{RAIN}/value", stop.rain)
+            mqttc.publish(f"{STOP}/{stop.id}/{RAIN}/timestamp", time.time())
+
+            mqttc.publish(f"{STOP}/{stop.id}/{PEOPLE}/value", stop.people)
+            mqttc.publish(f"{STOP}/{stop.id}/{PEOPLE}/timestamp", time.time())
             # --- 
 
             print(stop.name, ":", stop.temp, stop.rain, stop.people)
@@ -145,8 +152,9 @@ if __name__ == "__main__":
                     bus.currentStop = bus.route[bus.route.index(bus.currentStop) + 1]
             
             # Publish bus data to MQTT
-            mqttc.publish(f"{BUS}/{bus.id}/{CURRENT_STOP}", bus.currentStop.id)
-            # ---
+            mqttc.publish(f"{BUS}/{bus.id}/{CURRENT_STOP}/value", bus.currentStop.id)
+            mqttc.publish(f"{BUS}/{bus.id}/{CURRENT_STOP}/timestamp", time.time())
+                        # ---
             print(bus.id, bus.currentStop.name)
         
         time.sleep(1)

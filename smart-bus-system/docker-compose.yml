@@ -11,13 +11,16 @@ configs:
 #       bind type: none
 #       device: /path/to/files/on/host
 
-    
+  
+
+
+
 networks:
   smart-bus-system-network:
     driver: bridge
     ipam:
       config:
-        - subnet: 20.0.0.0/16
+        - subnet: 10.0.0.0/8
 
 
 services:
@@ -26,9 +29,13 @@ services:
     build: ./sensors
     volumes:
       - ./config.json:/config.json
+    environment:
+      - USERNAME=${USERNAME}
+      - PASSWORD=${PASSWORD}
+    container_name: smart-bus-system-sensors
     networks:
       smart-bus-system-network:
-        ipv4_address: 20.0.0.10
+        ipv4_address: 10.0.0.10
 
   mosquitto:
     container_name: smart-bus-system-mosquitto
@@ -42,7 +49,7 @@ services:
     restart: always
     networks:
       smart-bus-system-network:
-        ipv4_address: 20.0.0.20
+        ipv4_address: 10.0.0.20
     ports:
       - 1883:1883
 
@@ -86,7 +93,7 @@ services:
       - "1880:1880"
     networks:
       smart-bus-system-network:
-        ipv4_address: 20.0.0.30
+        ipv4_address: 10.0.0.30
     volumes:
       - ./nodered/data:/data
       - ./config.json:/system_data/config.json
@@ -104,15 +111,15 @@ services:
       - ./influxdb/config:/etc/influxdb2
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_USERNAME=admin
-      - DOCKER_INFLUXDB_INIT_PASSWORD=admin123
+      - DOCKER_INFLUXDB_INIT_USERNAME=${USERNAME}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${PASSWORD}
       - DOCKER_INFLUXDB_INIT_ORG=univaq
       - DOCKER_INFLUXDB_INIT_BUCKET=smart-bus-system
       - DOCKER_INFLUXDB_INIT_RETENTION=1w
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=Ga8nVsXP4FAe5_M1a5j7uCa4zO_u_M9oUsO8wUSWh_wPbR3clc9ZTv420Li9adOVCPl1tGvn6hLHfI5gP7Lm5A== #TODO inserire token
     networks:
       smart-bus-system-network:
-        ipv4_address: 20.0.0.40
+        ipv4_address: 10.0.0.40
 
 
   telegraf:
@@ -164,7 +171,7 @@ services:
       - ./grafana:/var/lib/grafana
     networks:
       smart-bus-system-network:
-        ipv4_address: 20.0.0.50
+        ipv4_address: 10.0.0.50
 
   # openfire:
   #   container_name: se4iot-openfire
