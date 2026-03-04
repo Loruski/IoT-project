@@ -200,23 +200,6 @@
         ]
     },
     {
-        "id": "7c7c5a9158a8d8bf",
-        "type": "debug",
-        "z": "fedad3d5513a812d",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1100,
-        "y": 480,
-        "wires": []
-    },
-    {
         "id": "13e1e2bb064496e6",
         "type": "function",
         "z": "fedad3d5513a812d",
