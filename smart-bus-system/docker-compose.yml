@@ -36,7 +36,7 @@ services:
 
   mosquitto:
     container_name: smart-bus-system-mosquitto
-    image: giacomix02/iot_mosquitto:v1
+    # image: giacomix02/iot_mosquitto:v1
     build:
       context: ./mosquitto
       args:
@@ -91,8 +91,9 @@ services:
     image: nodered/node-red:latest
     environment:
       - TZ=Europe/Rome
-      - MYSQLUSERNAME=root
-      - MYSQLPASSWORD=example
+      # - MYSQLUSERNAME=root
+      # - MYSQLPASSWORD=example
+      - INFLUX_TOKEN=${INFLUX_TOKEN}
     ports:
       - "1880:1880"
     networks:
@@ -120,7 +121,7 @@ services:
       - DOCKER_INFLUXDB_INIT_ORG=univaq
       - DOCKER_INFLUXDB_INIT_BUCKET=smart-bus-system
       - DOCKER_INFLUXDB_INIT_RETENTION=1w
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=apjbchV0DxiMqyLFGxZPrNe1BtsRCKyfrAKGWjG5tngI0LwvCsKPMrL7UNZxLtliljCvHqJaueMMqULQ7yt1Zw==
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUX_TOKEN}
     networks:
       smart-bus-system-network:
         ipv4_address: 20.0.0.40
@@ -138,7 +139,7 @@ services:
   #     - ./telegraf/sys:/host/sys:ro
   #     - ./telegraf/etc:/host/etc:ro
   #   environment:
-  #     - INFLUX_TOKEN=QGslD-uSKyaBmqGLPrB7cONwsxLjJpZ2x8IA6emLNEvs0DUA5cTPNUBhnNf37Jpv94fznOFDle2DSTWAOF4Ccg==
+  #     - INFLUX_TOKEN=_1YbZPbbIhEAVfKOlMNWXOjdyxHJFaM2PNUHF8j-0LqyB6QN9jN7ZUwmT8wH577bknUAuTpBmXQkKN8rLFXnWg==
   #     - HOST_PROC=/host/proc
   #     - HOST_SYS=/host/sys
   #     - HOST_ETC=/host/etc
