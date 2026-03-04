@@ -2,7 +2,7 @@
     {
         "id": "fedad3d5513a812d",
         "type": "tab",
-        "label": "Flow 1",
+        "label": "mqtt",
         "disabled": false,
         "info": "",
         "env": []

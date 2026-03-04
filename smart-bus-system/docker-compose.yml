@@ -93,6 +93,8 @@ services:
       - TZ=Europe/Rome
       # - MYSQLUSERNAME=root
       # - MYSQLPASSWORD=example
+      - MQTT_USERNAME=${IOT_USERNAME}
+      - MQTT_PASSWORD=${IOT_PASSWORD}
       - INFLUX_TOKEN=${INFLUX_TOKEN}
     ports:
       - "1880:1880"
