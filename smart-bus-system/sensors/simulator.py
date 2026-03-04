@@ -9,7 +9,7 @@ import configReader
 import random
 
 # Load environment variables
-load_dotenv()
+# load_dotenv()
 ADMIN_USERNAME = os.getenv("IOT_USERNAME")
 ADMIN_PASSWORD = os.getenv("IOT_PASSWORD")
 
