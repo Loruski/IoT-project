@@ -512,5 +512,43 @@
                 "file": "/data/node_modules/node-red-contrib-join-wait/join-wait.js"
             }
         }
+    },
+    "node-red-contrib-wait-paths": {
+        "name": "node-red-contrib-wait-paths",
+        "version": "0.3.2",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "wait-paths": {
+                "name": "wait-paths",
+                "types": [
+                    "wait-paths"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-wait-paths",
+                "file": "/data/node_modules/node-red-contrib-wait-paths/wait-paths.js"
+            }
+        }
+    },
+    "node-red-contrib-merge": {
+        "name": "node-red-contrib-merge",
+        "version": "0.1.1",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "merge": {
+                "name": "merge",
+                "types": [
+                    "merge"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-merge",
+                "file": "/data/node_modules/node-red-contrib-merge/17-merge.js"
+            }
+        }
     }
 }

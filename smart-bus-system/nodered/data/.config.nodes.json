@@ -531,5 +531,43 @@
                 "file": "/data/node_modules/node-red-contrib-wait-paths/wait-paths.js"
             }
         }
+    },
+    "node-red-contrib-merge": {
+        "name": "node-red-contrib-merge",
+        "version": "0.1.1",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "merge": {
+                "name": "merge",
+                "types": [
+                    "merge"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-merge",
+                "file": "/data/node_modules/node-red-contrib-merge/17-merge.js"
+            }
+        }
+    },
+    "node-red-contrib-merge-topic": {
+        "name": "node-red-contrib-merge-topic",
+        "version": "0.1.2",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "merge": {
+                "name": "merge",
+                "types": [
+                    "mergeTopic"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-merge-topic",
+                "file": "/data/node_modules/node-red-contrib-merge-topic/17-merge.js"
+            }
+        }
     }
 }

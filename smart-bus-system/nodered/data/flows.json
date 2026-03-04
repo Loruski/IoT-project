@@ -18,7 +18,7 @@
         "usetls": false,
         "tls": "",
         "influxdbVersion": "2.0",
-        "url": "http://20.0.0.20:8086",
+        "url": "http://20.0.0.40:8086",
         "timeout": 10,
         "rejectUnauthorized": true
     },
@@ -59,7 +59,7 @@
         "z": "fedad3d5513a812d",
         "influxdb": "fd924e876cf2964c",
         "name": "",
-        "measurement": "",
+        "measurement": "busStop",
         "precision": "",
         "retentionPolicy": "",
         "database": "database",
@@ -67,8 +67,8 @@
         "retentionPolicyV18Flux": "",
         "org": "univaq",
         "bucket": "smart",
-        "x": 990,
-        "y": 340,
+        "x": 1180,
+        "y": 620,
         "wires": []
     },
     {
@@ -84,11 +84,11 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 240,
-        "y": 400,
+        "x": 200,
+        "y": 560,
         "wires": [
             [
-                "195290f2764eb075"
+                "69c87f475d460617"
             ]
         ]
     },
@@ -105,11 +105,11 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 250,
-        "y": 500,
+        "x": 210,
+        "y": 640,
         "wires": [
             [
-                "195290f2764eb075"
+                "69c87f475d460617"
             ]
         ]
     },
@@ -126,27 +126,11 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 250,
-        "y": 600,
+        "x": 210,
+        "y": 720,
         "wires": [
             [
-                "195290f2764eb075"
-            ]
-        ]
-    },
-    {
-        "id": "ed4eb3fa33ca051e",
-        "type": "json",
-        "z": "fedad3d5513a812d",
-        "name": "",
-        "property": "payload",
-        "action": "obj",
-        "pretty": false,
-        "x": 610,
-        "y": 500,
-        "wires": [
-            [
-                "61bca668bbc23b9f"
+                "69c87f475d460617"
             ]
         ]
     },
@@ -155,79 +139,208 @@
         "type": "function",
         "z": "fedad3d5513a812d",
         "name": "extract id",
-        "func": "let topic = msg.topic\nlet array = topic.split(\"/\")\n\nlet id = array[1]\n\nmsg.id=id\nmsg.type=array[2]\n\nreturn msg;",
+        "func": "let data = msg.payload;\n\n// 1. Forza la conversione in oggetto se non lo è già\nif (typeof data === 'string') {\n    try {\n        data = JSON.parse(data);\n    } catch (e) {\n        node.error(\"Errore nel parsing JSON: \" + e.message);\n        return null;\n    }\n}\n\nlet array = msg.topic.split(\"/\");\nlet stopId = array[1];   // \"Stop1\", \"Stop4\", ecc.\nlet sensorType = array[2]; // \"temp\", \"rain\", ecc.\n\n// 2. Controllo sicurezza per evitare 'undefined'\nif (data && data.hasOwnProperty('value')) {\n    // Prepariamo il payload per il nodo Join\n    msg.payload = {\n        [sensorType]: data.value,\n        timestamp: data.timestamp\n    };\n\n    // 3. AGGIUNGIAMO I TAG PER INFLUXDB\n    // Questo creerà una colonna \"bus_stop\" nel tuo database Influx\n    msg.tags = {\n        bus_stop: stopId\n    };\n\n    // Impostiamo il topic per il raggruppamento del nodo Join\n    msg.topic = stopId;\n\n    return msg;\n} else {\n    node.warn(\"Payload non contiene 'value': \" + JSON.stringify(data));\n    return null;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 460,
-        "y": 500,
+        "x": 620,
+        "y": 620,
         "wires": [
             [
-                "ed4eb3fa33ca051e"
+                "df6809d8e47f952a"
             ]
         ]
     },
     {
-        "id": "c1308a1eb4983b8d",
-        "type": "debug",
+        "id": "df6809d8e47f952a",
+        "type": "join",
         "z": "fedad3d5513a812d",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 960,
-        "y": 500,
+        "name": "",
+        "mode": "custom",
+        "build": "merged",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": true,
+        "timeout": "",
+        "count": "3",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 770,
+        "y": 620,
+        "wires": [
+            [
+                "13e1e2bb064496e6"
+            ]
+        ]
+    },
+    {
+        "id": "69c87f475d460617",
+        "type": "json",
+        "z": "fedad3d5513a812d",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 450,
+        "y": 620,
+        "wires": [
+            [
+                "195290f2764eb075"
+            ]
+        ]
+    },
+    {
+        "id": "13e1e2bb064496e6",
+        "type": "function",
+        "z": "fedad3d5513a812d",
+        "name": "export for influx",
+        "func": "// Prendi i dati dei sensori (Fields)\nlet fields = {\n    temp: msg.payload.temp,\n    rain: msg.payload.rain,\n    people: msg.payload.people\n};\n\n// Definisci i metadati (Tags)\n// Usiamo msg.tags.bus_stop oppure msg.topic se contiene il nome della fermata\nlet tags = {\n    bus_stop: msg.tags ? msg.tags.bus_stop : msg.topic \n};\n\n// Formatta il payload come richiesto dalla documentazione: [fields, tags]\nmsg.payload = [fields, tags];\n\n// Opzionale: Se vuoi mantenere il timestamp originale del sensore\nif (msg.timestamp) {\n    msg.timestamp = new Date(msg.timestamp);\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 620,
+        "wires": [
+            [
+                "f245b2357094f440"
+            ]
+        ]
+    },
+    {
+        "id": "23b4225ef0ebb4b3",
+        "type": "influxdb out",
+        "z": "fedad3d5513a812d",
+        "influxdb": "fd924e876cf2964c",
+        "name": "",
+        "measurement": "autobus",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "univaq",
+        "bucket": "smart",
+        "x": 1180,
+        "y": 900,
         "wires": []
     },
     {
-        "id": "61bca668bbc23b9f",
-        "type": "join-wait",
+        "id": "b454247a9e13b74e",
+        "type": "mqtt in",
         "z": "fedad3d5513a812d",
         "name": "",
-        "paths": "[\"rain\",\"people\",\"temp\"]",
-        "pathsToExpire": "",
-        "useRegex": false,
-        "warnUnmatched": false,
-        "pathTopic": "type",
-        "pathTopicType": "msg",
-        "correlationTopic": "",
-        "correlationTopicType": "undefined",
-        "timeout": 15000,
-        "timeoutUnits": 1,
-        "exactOrder": "false",
-        "firstMsg": "true",
-        "mapPayload": "false",
-        "disableComplete": false,
-        "persistOnRestart": false,
-        "x": 780,
-        "y": 500,
+        "topic": "bus/+/current_stop",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "9adb1e1455e547d7",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 230,
+        "y": 900,
         "wires": [
-            [],
             [
-                "c1308a1eb4983b8d"
+                "24ae5583e778b8e7"
             ]
         ]
     },
     {
-        "id": "1c478c97f1f0ad18",
-        "type": "wait-paths",
+        "id": "33f0cdeb653d61de",
+        "type": "function",
+        "z": "fedad3d5513a812d",
+        "name": "extract id",
+        "func": "let data = msg.payload;\n\n// 1. Forza la conversione in oggetto se non lo è già\nif (typeof data === 'string') {\n    try {\n        data = JSON.parse(data);\n    } catch (e) {\n        node.error(\"Errore nel parsing JSON: \" + e.message);\n        return null;\n    }\n}\n\nlet array = msg.topic.split(\"/\");\nlet stopId = array[1];   // \"Stop1\", \"Stop4\", ecc.\nlet sensorType = array[2]; // \"temp\", \"rain\", ecc.\n\n// 2. Controllo sicurezza per evitare 'undefined'\nif (data && data.hasOwnProperty('value')) {\n    // Prepariamo il payload per il nodo Join\n    msg.payload = {\n        [sensorType]: data.value,\n        timestamp: data.timestamp\n    };\n\n    // 3. AGGIUNGIAMO I TAG PER INFLUXDB\n    // Questo creerà una colonna \"bus_stop\" nel tuo database Influx\n    msg.tags = {\n        bus_stop: stopId\n    };\n\n    // Impostiamo il topic per il raggruppamento del nodo Join\n    msg.topic = stopId;\n\n    return msg;\n} else {\n    node.warn(\"Payload non contiene 'value': \" + JSON.stringify(data));\n    return null;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 900,
+        "wires": [
+            [
+                "6532b0d841deadeb"
+            ]
+        ]
+    },
+    {
+        "id": "6532b0d841deadeb",
+        "type": "join",
         "z": "fedad3d5513a812d",
         "name": "",
-        "paths": "[\"path_1\",\"other_path\"]",
-        "timeout": 15000,
-        "finalTimeout": 60000,
-        "x": 750,
-        "y": 800,
+        "mode": "custom",
+        "build": "merged",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": true,
+        "timeout": "",
+        "count": "1",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 770,
+        "y": 900,
         "wires": [
-            []
+            [
+                "c6a551ef49e7ae9a"
+            ]
+        ]
+    },
+    {
+        "id": "24ae5583e778b8e7",
+        "type": "json",
+        "z": "fedad3d5513a812d",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 450,
+        "y": 900,
+        "wires": [
+            [
+                "33f0cdeb653d61de"
+            ]
+        ]
+    },
+    {
+        "id": "c6a551ef49e7ae9a",
+        "type": "function",
+        "z": "fedad3d5513a812d",
+        "name": "export for influx",
+        "func": "// Prendi i dati dei sensori (Fields)\nlet fields = {\n    stop: msg.payload.current_stop,\n};\n\n// Definisci i metadati (Tags)\n// Usiamo msg.tags.bus_stop oppure msg.topic se contiene il nome della fermata\nlet tags = {\n    bus_stop: msg.tags ? msg.tags.bus_stop : msg.topic \n};\n\n// Formatta il payload come richiesto dalla documentazione: [fields, tags]\nmsg.payload = [fields, tags];\n\n// Opzionale: Se vuoi mantenere il timestamp originale del sensore\nif (msg.timestamp) {\n    msg.timestamp = new Date(msg.timestamp);\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 900,
+        "wires": [
+            [
+                "23b4225ef0ebb4b3"
+            ]
         ]
     }
 ]

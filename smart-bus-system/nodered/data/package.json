@@ -7,6 +7,8 @@
         "@emuanalytics/node-red-contrib-flow-ingest": "~0.0.4",
         "node-red-contrib-influxdb": "~0.7.0",
         "node-red-contrib-join-wait": "~0.5.3",
+        "node-red-contrib-merge": "~0.1.1",
+        "node-red-contrib-merge-topic": "~0.1.2",
         "node-red-contrib-wait-paths": "~0.3.2"
     }
 }
