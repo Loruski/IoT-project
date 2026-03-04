@@ -27,8 +27,8 @@ services:
     volumes:
       - ./config.json:/config.json
     environment:
-      - USERNAME=${IOT_USERNAME}
-      - PASSWORD=${IOT_PASSWORD}
+      - IOT_USERNAME=${IOT_USERNAME}
+      - IOT_PASSWORD=${IOT_PASSWORD}
     container_name: smart-bus-system-sensors
     networks:
       smart-bus-system-network:
