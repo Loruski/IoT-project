@@ -2,6 +2,7 @@
 import time
 import os
 import paho.mqtt.client as mqtt
+import json
 from classes import Bus, Stop 
 from dotenv import load_dotenv
 from configReader import read_buses_config, read_city_params, read_stop_config, reload_buses, reload_stops
@@ -10,8 +11,8 @@ import random
 
 # Load environment variables
 load_dotenv()
-ADMIN_USERNAME = os.getenv("IOT_USERNAME")
-ADMIN_PASSWORD = os.getenv("IOT_PASSWORD")
+ADMIN_USERNAME = os.getenv("USERNAME")
+ADMIN_PASSWORD = os.getenv("PASSWORD")
 
 print("Admin username:", ADMIN_USERNAME)
 print("Admin password:", ADMIN_PASSWORD)
@@ -136,14 +137,11 @@ if __name__ == "__main__":
             stop.people = dice_roll_people_at_stop(stop.rain, stop.temp, stop.people)
 
             # Publish stop data to MQTT
-            mqttc.publish(f"{STOP}/{stop.id}/{TEMP}/stop_value", stop.temp)
-            mqttc.publish(f"{STOP}/{stop.id}/{TEMP}/stop_timestamp", time.time())
+            mqttc.publish(f"{STOP}/{stop.id}/{TEMP}", json.dumps({"value": stop.temp, "timestamp": time.time()}), qos=0)
 
-            mqttc.publish(f"{STOP}/{stop.id}/{RAIN}/stop_value", stop.rain)
-            mqttc.publish(f"{STOP}/{stop.id}/{RAIN}/stop_timestamp", time.time())
+            mqttc.publish(f"{STOP}/{stop.id}/{RAIN}", json.dumps({"value": stop.rain, "timestamp": time.time()}), qos=0)
 
-            mqttc.publish(f"{STOP}/{stop.id}/{PEOPLE}/stop_value", stop.people)
-            mqttc.publish(f"{STOP}/{stop.id}/{PEOPLE}/timestamp", time.time())
+            mqttc.publish(f"{STOP}/{stop.id}/{PEOPLE}", json.dumps({"value": stop.people, "timestamp": time.time()}), qos=0)
             # --- 
 
             print(stop.name, ":", stop.temp, stop.rain, stop.people)
@@ -158,9 +156,8 @@ if __name__ == "__main__":
                     bus.currentStop = bus.route[bus.route.index(bus.currentStop) + 1]
             
             # Publish bus data to MQTT
-            mqttc.publish(f"{BUS}/{bus.id}/{CURRENT_STOP}/bus_value", bus.currentStop.id)
-            mqttc.publish(f"{BUS}/{bus.id}/{CURRENT_STOP}/bus_timestamp", time.time())
-                        # ---
+            mqttc.publish(f"{BUS}/{bus.id}/{CURRENT_STOP}", json.dumps({"value": bus.currentStop.id, "timestamp": time.time()}), qos=0)
+            # ---
             print(bus.id, bus.currentStop.name)
         
         time.sleep(1)
