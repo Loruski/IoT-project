@@ -36,7 +36,7 @@ services:
 
   mosquitto:
     container_name: smart-bus-system-mosquitto
-    # image: giacomix02/iot_mosquitto:v1
+    image: giacomix02/iot_mosquitto:v1
     build:
       context: ./mosquitto
       args:
@@ -85,9 +85,9 @@ services:
 
   node-red:
     container_name: node-red
-    # build:
-    #   context: ./nodered-custom/
-    #   dockerfile: Dockerfile
+    build:
+      context: ./nodered/
+      dockerfile: Dockerfile
     image: nodered/node-red:latest
     environment:
       - TZ=Europe/Rome
@@ -126,25 +126,25 @@ services:
         ipv4_address: 20.0.0.40
 
 
-  telegraf:
-    image: telegraf:latest
-    container_name: telegraf
-    depends_on:
-      - influxdb
-    restart: unless-stopped
-    volumes:
-      - ./telegraf/smart-bus-system-bucket.conf:/etc/telegraf/telegraf.conf:ro
-      - ./telegraf/proc:/host/proc:ro
-      - ./telegraf/sys:/host/sys:ro
-      - ./telegraf/etc:/host/etc:ro
-    environment:
-      - INFLUX_TOKEN=3Lhhog5TvBby3ryK1-zqTXMHhyUJaKF-TOaA0z-v0le717QHsxFfCwT6m683syfa1EhvZP006EuEfJW_NlYNFw==
-      - HOST_PROC=/host/proc
-      - HOST_SYS=/host/sys
-      - HOST_ETC=/host/etc
-    networks:
-      smart-bus-system-network:
-        ipv4_address: 20.0.0.60
+  # telegraf:
+  #   image: telegraf:latest
+  #   container_name: telegraf
+  #   depends_on:
+  #     - influxdb
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./telegraf/smart-bus-system-bucket.conf:/etc/telegraf/telegraf.conf:ro
+  #     - ./telegraf/proc:/host/proc:ro
+  #     - ./telegraf/sys:/host/sys:ro
+  #     - ./telegraf/etc:/host/etc:ro
+  #   environment:
+  #     - INFLUX_TOKEN=QGslD-uSKyaBmqGLPrB7cONwsxLjJpZ2x8IA6emLNEvs0DUA5cTPNUBhnNf37Jpv94fznOFDle2DSTWAOF4Ccg==
+  #     - HOST_PROC=/host/proc
+  #     - HOST_SYS=/host/sys
+  #     - HOST_ETC=/host/etc
+  #   networks:
+  #     smart-bus-system-network:
+  #       ipv4_address: 20.0.0.60
 
 
   # rabbitmq:

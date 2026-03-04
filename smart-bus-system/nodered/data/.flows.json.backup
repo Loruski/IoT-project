@@ -1,0 +1,233 @@
+[
+    {
+        "id": "fedad3d5513a812d",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "fd924e876cf2964c",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": 8086,
+        "protocol": "http",
+        "database": "database",
+        "name": "influx",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://20.0.0.20:8086",
+        "timeout": 10,
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "9adb1e1455e547d7",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "20.0.0.20",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "f245b2357094f440",
+        "type": "influxdb out",
+        "z": "fedad3d5513a812d",
+        "influxdb": "fd924e876cf2964c",
+        "name": "",
+        "measurement": "",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "univaq",
+        "bucket": "smart",
+        "x": 990,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "0bad3dcc16db831f",
+        "type": "mqtt in",
+        "z": "fedad3d5513a812d",
+        "name": "",
+        "topic": "stop/+/rain",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "9adb1e1455e547d7",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 240,
+        "y": 400,
+        "wires": [
+            [
+                "195290f2764eb075"
+            ]
+        ]
+    },
+    {
+        "id": "10f5e25394b90b1c",
+        "type": "mqtt in",
+        "z": "fedad3d5513a812d",
+        "name": "",
+        "topic": "stop/+/temp",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "9adb1e1455e547d7",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 250,
+        "y": 500,
+        "wires": [
+            [
+                "195290f2764eb075"
+            ]
+        ]
+    },
+    {
+        "id": "1328921a70c31088",
+        "type": "mqtt in",
+        "z": "fedad3d5513a812d",
+        "name": "",
+        "topic": "stop/+/people",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "9adb1e1455e547d7",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 250,
+        "y": 600,
+        "wires": [
+            [
+                "195290f2764eb075"
+            ]
+        ]
+    },
+    {
+        "id": "ed4eb3fa33ca051e",
+        "type": "json",
+        "z": "fedad3d5513a812d",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 610,
+        "y": 500,
+        "wires": [
+            [
+                "61bca668bbc23b9f"
+            ]
+        ]
+    },
+    {
+        "id": "195290f2764eb075",
+        "type": "function",
+        "z": "fedad3d5513a812d",
+        "name": "extract id",
+        "func": "let topic = msg.topic\nlet array = topic.split(\"/\")\n\nlet id = array[1]\n\nmsg.id=id\nmsg.type=array[2]\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 500,
+        "wires": [
+            [
+                "ed4eb3fa33ca051e"
+            ]
+        ]
+    },
+    {
+        "id": "c1308a1eb4983b8d",
+        "type": "debug",
+        "z": "fedad3d5513a812d",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "61bca668bbc23b9f",
+        "type": "join-wait",
+        "z": "fedad3d5513a812d",
+        "name": "",
+        "paths": "[\"rain\",\"people\",\"temp\"]",
+        "pathsToExpire": "",
+        "useRegex": false,
+        "warnUnmatched": false,
+        "pathTopic": "type",
+        "pathTopicType": "msg",
+        "correlationTopic": "payload.timestamp",
+        "correlationTopicType": "msg",
+        "timeout": 15000,
+        "timeoutUnits": 1,
+        "exactOrder": "false",
+        "firstMsg": "true",
+        "mapPayload": "false",
+        "disableComplete": false,
+        "persistOnRestart": false,
+        "x": 780,
+        "y": 500,
+        "wires": [
+            [],
+            [
+                "c1308a1eb4983b8d"
+            ]
+        ]
+    },
+    {
+        "id": "1c478c97f1f0ad18",
+        "type": "wait-paths",
+        "z": "fedad3d5513a812d",
+        "name": "",
+        "paths": "[\"path_1\",\"other_path\"]",
+        "timeout": 15000,
+        "finalTimeout": 60000,
+        "x": 750,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    }
+]
