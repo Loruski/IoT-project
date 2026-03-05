@@ -34,6 +34,15 @@ services:
       smart-bus-system-network:
         ipv4_address: 20.0.0.10
 
+  config-api:
+    build: ./config-api
+    container_name: smart-bus-system-config-api
+    networks:
+      smart-bus-system-network:
+        ipv4_address: 20.0.0.11
+    ports:
+      - 5000:5000
+
   mosquitto:
     container_name: smart-bus-system-mosquitto
     # image: giacomix02/iot_mosquitto:v1

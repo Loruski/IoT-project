@@ -62,20 +62,6 @@
         "sessionExpiry": ""
     },
     {
-        "id": "a5fb30b4d7dfa352",
-        "type": "openApi-red-url",
-        "name": "",
-        "url": "20.0.0.50:3000",
-        "urlType": "str",
-        "server": "",
-        "serverType": "custom",
-        "devMode": false,
-        "headers": [],
-        "useAuthCertificate": false,
-        "authCertificate": "",
-        "authCertificateKey": ""
-    },
-    {
         "id": "f245b2357094f440",
         "type": "influxdb out",
         "z": "fedad3d5513a812d",
@@ -393,5 +379,37 @@
         "x": 620,
         "y": 280,
         "wires": []
+    },
+    {
+        "id": "a1f18bafb49ceb24",
+        "type": "http in",
+        "z": "ea10f273fd104f07",
+        "name": "",
+        "url": "/stops",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 320,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "79498f6845801faf",
+        "type": "http in",
+        "z": "ea10f273fd104f07",
+        "name": "",
+        "url": "/buses",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 330,
+        "y": 460,
+        "wires": [
+            []
+        ]
     }
 ]
