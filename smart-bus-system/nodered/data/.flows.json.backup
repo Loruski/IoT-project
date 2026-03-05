@@ -2,7 +2,15 @@
     {
         "id": "fedad3d5513a812d",
         "type": "tab",
-        "label": "mqtt",
+        "label": "mqtt to influx",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ea10f273fd104f07",
+        "type": "tab",
+        "label": "grafana api",
         "disabled": false,
         "info": "",
         "env": []
@@ -52,6 +60,20 @@
         "willMsg": {},
         "userProps": "",
         "sessionExpiry": ""
+    },
+    {
+        "id": "a5fb30b4d7dfa352",
+        "type": "openApi-red-url",
+        "name": "",
+        "url": "20.0.0.50:3000",
+        "urlType": "str",
+        "server": "",
+        "serverType": "custom",
+        "devMode": false,
+        "headers": [],
+        "useAuthCertificate": false,
+        "authCertificate": "",
+        "authCertificateKey": ""
     },
     {
         "id": "f245b2357094f440",
@@ -342,5 +364,34 @@
                 "23b4225ef0ebb4b3"
             ]
         ]
+    },
+    {
+        "id": "6d9fea25d08f564f",
+        "type": "http in",
+        "z": "ea10f273fd104f07",
+        "name": "",
+        "url": "/test",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 320,
+        "y": 280,
+        "wires": [
+            [
+                "474c7d3b9c87cde0"
+            ]
+        ]
+    },
+    {
+        "id": "474c7d3b9c87cde0",
+        "type": "http response",
+        "z": "ea10f273fd104f07",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 620,
+        "y": 280,
+        "wires": []
     }
 ]

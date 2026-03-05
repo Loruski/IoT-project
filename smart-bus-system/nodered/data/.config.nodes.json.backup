@@ -494,25 +494,6 @@
             }
         }
     },
-    "node-red-contrib-join-wait": {
-        "name": "node-red-contrib-join-wait",
-        "version": "0.5.3",
-        "local": true,
-        "user": true,
-        "nodes": {
-            "join-wait": {
-                "name": "join-wait",
-                "types": [
-                    "join-wait"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "node-red-contrib-join-wait",
-                "file": "/data/node_modules/node-red-contrib-join-wait/join-wait.js"
-            }
-        }
-    },
     "node-red-contrib-wait-paths": {
         "name": "node-red-contrib-wait-paths",
         "version": "0.3.2",
@@ -532,22 +513,52 @@
             }
         }
     },
-    "node-red-contrib-merge": {
-        "name": "node-red-contrib-merge",
-        "version": "0.1.1",
+    "node-red-contrib-merge-topic": {
+        "name": "node-red-contrib-merge-topic",
+        "version": "0.1.2",
         "local": true,
         "user": true,
         "nodes": {
             "merge": {
                 "name": "merge",
                 "types": [
-                    "merge"
+                    "mergeTopic"
                 ],
                 "enabled": true,
                 "local": true,
                 "user": false,
-                "module": "node-red-contrib-merge",
-                "file": "/data/node_modules/node-red-contrib-merge/17-merge.js"
+                "module": "node-red-contrib-merge-topic",
+                "file": "/data/node_modules/node-red-contrib-merge-topic/17-merge.js"
+            }
+        }
+    },
+    "openapi-red": {
+        "name": "openapi-red",
+        "version": "2.8.0",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "openApi-red": {
+                "name": "openApi-red",
+                "types": [
+                    "openApi-red"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "openapi-red",
+                "file": "/data/node_modules/openapi-red/src/openapi.js"
+            },
+            "openApi-red-url": {
+                "name": "openApi-red-url",
+                "types": [
+                    "openApi-red-url"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "openapi-red",
+                "file": "/data/node_modules/openapi-red/src/config.js"
             }
         }
     }
