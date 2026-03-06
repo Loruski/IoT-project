@@ -60,3 +60,13 @@ in node red are defined 3 environment variables:
 - INFLUX_TOKEN
 
 They're used in the nodes using the following format: ${ENVIRONMENT_VARIABLE}
+
+## Problems
+### network ports binding fail:
+This solution helped me (run as administrator your terminal):
+
+net stop winnat
+docker start container_name
+net start winnat
+UPDATE: WinNAT (Windows Network Address Translation) is a windows operating system service. It helps in translating private network addresses into a public address. So, such conflicts in ports for docker can be solved by restarting that service.
+(https://stackoverflow.com/a/66198584)

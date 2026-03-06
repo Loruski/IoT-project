@@ -1,7 +1,7 @@
 # Use root/example as user/password credentials
-configs:
-  system_config:
-    file: ./config.json
+# configs:
+#   system_config:
+#     file: ./config.json
   
 # volumes:
 #   smart-bus-volume:
@@ -24,6 +24,9 @@ services:
 
   sensors:
     build: ./sensors
+    depends_on:
+      - mosquitto
+      - config-api
     # volumes:
     #   - ./config.json:/config.json
     environment:
@@ -47,7 +50,6 @@ services:
 
   mosquitto:
     container_name: smart-bus-system-mosquitto
-    # image: giacomix02/iot_mosquitto:v1
     build:
       context: ./mosquitto
       args:
@@ -96,6 +98,9 @@ services:
 
   node-red:
     container_name: node-red
+    depends_on:
+      - mosquitto
+      - influxdb
     build:
       context: ./nodered/
       dockerfile: Dockerfile
@@ -125,8 +130,8 @@ services:
     ports:
       - 8086:8086
     #volumes:
-      #- ./influxdb/data:/var/lib/influxdb2
-      #- ./influxdb/config:/etc/influxdb2
+      # - ./influxdb/data:/var/lib/influxdb2
+      # - ./influxdb/config:/etc/influxdb2
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=${IOT_USERNAME}
@@ -179,16 +184,14 @@ services:
     container_name: grafana
     restart: always
     depends_on:
-      - influxdb
+      - config-api
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_INSTALL_PLUGINS=volkovlabs-form-panel
       - GF_PLUGINS_PREINSTALLED=volkovlabs-form-panel, grafana-infinity-datasource
-    links:
-      - influxdb
     ports:
-      - '3000:3000'
+      - 3000:3000
     volumes:
       - ./grafana:/var/lib/grafana
     networks:
