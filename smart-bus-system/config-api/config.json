@@ -1,13 +1,52 @@
 {
-  "city_params": { "rain_factor": 1.2, "global_temp": 22 },
+  "city_params": {
+    "rain_factor": 1.2,
+    "global_temp": 22
+  },
   "buses": [
-    { "id": "B1", "route": ["Stop4", "Stop2", "Stop3"], "capacity": 50 },
-    { "id": "B2", "route": ["Stop3", "Stop4", "Stop1"], "capacity": 40 }
+    {
+      "id": "B1",
+      "route": [
+        "Stop4",
+        "Stop2",
+        "Stop3"
+      ],
+      "capacity": 50
+    },
+    {
+      "id": "B2",
+      "route": [
+        "Stop3",
+        "Stop4",
+        "Stop1"
+      ],
+      "capacity": 40
+    }
   ],
   "stops": [
-    { "id": "Stop1", "lat": 45.46, "lon": 9.18, "name": "Duomo" },
-    { "id": "Stop2", "lat": 452.46, "lon": 91.18, "name": "Fontana" },
-    { "id": "Stop3", "lat": 42.46, "lon": 1.18, "name": "Parco" },
-    { "id": "Stop4", "lat": 42.46, "lon": 1.18, "name": "Parcheggio" }
+    {
+      "id": "Stop1",
+      "lat": 45.46,
+      "lon": 9.18,
+      "name": "Duomo"
+    },
+    {
+      "id": "Stop2",
+      "lat": 452.46,
+      "lon": 91.18,
+      "name": "Fontana"
+    },
+    {
+      "id": "Stop3",
+      "lat": 42.46,
+      "lon": 1.18,
+      "name": "Parco"
+    },
+    {
+      "id": "Stop4",
+      "lat": 42.46,
+      "lon": 1.18,
+      "name": "Parcheggio"
+    }
   ]
 }

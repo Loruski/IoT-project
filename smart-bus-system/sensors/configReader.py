@@ -14,7 +14,7 @@ def load_config():
     return response.json()
     
 def read_stop_config():
-    response = requests.get(f"{API_BASE_URL}/stops")
+    response = requests.get(f"{API_BASE_URL}/getStops")
     response.raise_for_status()
     stops_data = response.json()
     
@@ -24,7 +24,7 @@ def read_stop_config():
     return stops_config
 
 def read_buses_config():
-    response = requests.get(f"{API_BASE_URL}/buses")
+    response = requests.get(f"{API_BASE_URL}/getBuses")
     response.raise_for_status()
     buses_data = response.json()
     

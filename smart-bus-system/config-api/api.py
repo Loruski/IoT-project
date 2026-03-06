@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import json
 import os
 
 app = Flask(__name__)
+CORS(app)
 FILE_PATH = 'config.json'
 
 # --- Helper Functions ---
@@ -26,13 +28,13 @@ def get_full_config():
     return jsonify(read_data()), 200
 
 # --- Endpoints for Buses ---
-@app.route('/buses', methods=['GET']) # GET the list of buses
+@app.route('/getBuses', methods=['GET']) # GET the list of buses
 def get_buses():
     """Returns the list of buses."""
     data = read_data()
     return jsonify(data.get('buses', [])), 200
 
-@app.route('/buses', methods=['POST']) # ADD a new bus
+@app.route('/addBus', methods=['POST']) # ADD a new bus
 def add_bus():
     """Adds a new bus to the configuration."""
     data = read_data()
@@ -45,7 +47,7 @@ def add_bus():
     write_data(data)
     return jsonify({"message": "Bus added successfully", "bus": new_bus}), 201
 
-@app.route('/buses/<bus_id>', methods=['DELETE']) # DELETE a bus
+@app.route('/deleteBus/<bus_id>', methods=['DELETE']) # DELETE a bus
 def delete_bus(bus_id):
     """Deletes a bus by its ID."""
     data = read_data()
@@ -61,15 +63,16 @@ def delete_bus(bus_id):
     return jsonify({"error": "Bus not found."}), 404
 
 # --- Endpoints for Stops ---
-@app.route('/stops', methods=['GET']) # GET the list of stops
+@app.route('/getStops', methods=['GET']) # GET the list of stops
 def get_stops():
     """Returns the list of stops."""
     data = read_data()
     return jsonify(data.get('stops', [])), 200
 
-@app.route('/stops', methods=['POST']) # ADD a new stop
+@app.route('/addStop', methods=['POST']) # ADD a new stop
 def add_stop():
     """Adds a new stop to the configuration."""
+
     data = read_data()
     new_stop = request.get_json()
     
@@ -77,16 +80,27 @@ def add_stop():
         return jsonify({"error": "Invalid stop data. 'id' is required."}), 400
         
     data['stops'].append(new_stop)
-    write_data(data)
-    return jsonify({"message": "Stop added successfully", "stop": new_stop}), 201
 
-@app.route('/stops/<stop_id>', methods=['DELETE']) # DELETE a stop
-def delete_stop(stop_id):
-    """Deletes a stop by its ID."""
+    write_data(data)
+    return jsonify({"message": "Stop added successfully", "stop": new_stop}), 200
+
+
+@app.route('/deleteStop', methods=['DELETE']) # DELETE a stop by ID
+def delete_stop():
+    """Deletes a stop by its ID sent in the JSON payload."""
+   
+    payload = request.get_json()
+    
+    
+    stop_id = payload.get('stop_id') 
+    
+    if not stop_id:
+        return jsonify({"error": "Nessun stop_id fornito"}), 400
+
     data = read_data()
     initial_length = len(data['stops'])
     
-    # Filter out the stop with the matching ID
+    
     data['stops'] = [s for s in data['stops'] if s['id'] != stop_id]
     
     if len(data['stops']) < initial_length:
@@ -97,7 +111,7 @@ def delete_stop(stop_id):
 
 
 # --- Endpoints for City Params ---
-@app.route('/city_params', methods=['POST']) # MODIFY city parameters
+@app.route('/updateCityParams', methods=['POST']) # MODIFY city parameters
 def update_city_params():
     """Aggiorna i parametri della città."""
     data = read_data()
