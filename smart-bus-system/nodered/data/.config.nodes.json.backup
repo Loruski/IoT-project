@@ -513,25 +513,6 @@
             }
         }
     },
-    "node-red-contrib-merge-topic": {
-        "name": "node-red-contrib-merge-topic",
-        "version": "0.1.2",
-        "local": true,
-        "user": true,
-        "nodes": {
-            "merge": {
-                "name": "merge",
-                "types": [
-                    "mergeTopic"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "node-red-contrib-merge-topic",
-                "file": "/data/node_modules/node-red-contrib-merge-topic/17-merge.js"
-            }
-        }
-    },
     "openapi-red": {
         "name": "openapi-red",
         "version": "2.8.0",

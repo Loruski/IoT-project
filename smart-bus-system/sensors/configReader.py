@@ -1,7 +1,7 @@
 import requests
 from classes import Bus, Stop, CityParams
 
-API_BASE_URL = "http://20.0.0.11:5000"
+API_BASE_URL = "http://20.0.0.12:5001"
 
 buses = []
 stops = []

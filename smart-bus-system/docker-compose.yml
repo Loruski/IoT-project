@@ -44,7 +44,21 @@ services:
     container_name: smart-bus-system-config-api
     networks:
       smart-bus-system-network:
+        ipv4_address: 20.0.0.12
+    ports:
+      - 5001:5001
+
+  grafana-middleware-api:
+    build: ./grafana-middleware-api
+    container_name: smart-bus-system-grafana-middleware-api
+    networks:
+      smart-bus-system-network:
         ipv4_address: 20.0.0.11
+    environment:
+      - INFLUX_TOKEN=${INFLUX_TOKEN}
+    depends_on:
+      - influxdb
+      - config-api
     ports:
       - 5000:5000
 
@@ -70,31 +84,6 @@ services:
     ports:
       - 1883:1883
 
-  
-  # db:
-  #   image: mysql
-  #   container_name: se4iot-mysql
-  #   # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
-  #   # (this is just an example, not intended to be a production configuration)
-  #   #command: --default-authentication-plugin=mysql_native_password --initialize-insecure
-  #   restart: always
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: admin
-  #   ports:
-  #   - "3306:3306" 
-  #   volumes:
-  #   - ./mysql-dump:/docker-entrypoint-initdb.d
-  #   #- ./mysql-data:/var/lib/mysql
-
-
-  # adminer:
-  #   image: adminer
-  #   container_name: se4iot-mysql-adminer
-  #   restart: always
-  #   ports:
-  #     - "8080:8080"
-  #   networks:
-  #     - se4iot-net
 
   node-red:
     container_name: node-red
@@ -145,46 +134,13 @@ services:
         ipv4_address: 20.0.0.40
 
 
-  # telegraf:
-  #   image: telegraf:latest
-  #   container_name: telegraf
-  #   depends_on:
-  #     - influxdb
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./telegraf/smart-bus-system-bucket.conf:/etc/telegraf/telegraf.conf:ro
-  #     - ./telegraf/proc:/host/proc:ro
-  #     - ./telegraf/sys:/host/sys:ro
-  #     - ./telegraf/etc:/host/etc:ro
-  #   environment:
-  #     - INFLUX_TOKEN=_1YbZPbbIhEAVfKOlMNWXOjdyxHJFaM2PNUHF8j-0LqyB6QN9jN7ZUwmT8wH577bknUAuTpBmXQkKN8rLFXnWg==
-  #     - HOST_PROC=/host/proc
-  #     - HOST_SYS=/host/sys
-  #     - HOST_ETC=/host/etc
-  #   networks:
-  #     smart-bus-system-network:
-  #       ipv4_address: 20.0.0.60
-
-
-  # rabbitmq:
-  #   image: rabbitmq:3-management
-  #   container_name: se4iot-rabbitmq
-  #   ports:
-  #     - "5672:5672"    # Port for RabbitMQ client connections
-  #     - "15672:15672"  # Port for RabbitMQ management UI
-  #   environment:
-  #     RABBITMQ_DEFAULT_USER: guest
-  #     RABBITMQ_DEFAULT_PASS: guest
-  #   networks:
-  #     se4iot-network:
-  #       ipv4_address: 20.0.0.105
-
   grafana:
     image: grafana/grafana
     container_name: grafana
     restart: always
     depends_on:
-      - config-api
+      - influxdb
+      - grafana-middleware-api
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
