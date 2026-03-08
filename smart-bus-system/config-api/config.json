@@ -26,27 +26,27 @@
   "stops": [
     {
       "id": "Stop1",
-      "lat": 45.46,
-      "lon": 9.18,
-      "name": "Duomo"
+      "lat": 42.36778027625135,
+      "lon": 13.352363241348343,
+      "name": "Coppito"
     },
     {
       "id": "Stop2",
-      "lat": 452.46,
-      "lon": 91.18,
-      "name": "Fontana"
+      "lat": 42.353781773720904,
+      "lon": 13.401777633837495,
+      "name": "Fontana Luminosa"
     },
     {
       "id": "Stop3",
-      "lat": 42.46,
-      "lon": 1.18,
-      "name": "Parco"
+      "lat": 42.35135255155964,
+      "lon": 13.385082408538553,
+      "name": "Stazione FS"
     },
     {
       "id": "Stop4",
-      "lat": 42.46,
-      "lon": 1.18,
-      "name": "Parcheggio"
+      "lat": 42.360289019203925,
+      "lon": 13.378059166446882,
+      "name": "Amiternum"
     }
   ]
 }

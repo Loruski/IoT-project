@@ -8,14 +8,6 @@
         "env": []
     },
     {
-        "id": "ea10f273fd104f07",
-        "type": "tab",
-        "label": "grafana api",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
         "id": "fd924e876cf2964c",
         "type": "influxdb",
         "hostname": "127.0.0.1",
@@ -361,67 +353,6 @@
             [
                 "23b4225ef0ebb4b3"
             ]
-        ]
-    },
-    {
-        "id": "6d9fea25d08f564f",
-        "type": "http in",
-        "z": "ea10f273fd104f07",
-        "name": "",
-        "url": "/test",
-        "method": "get",
-        "upload": false,
-        "skipBodyParsing": false,
-        "swaggerDoc": "",
-        "x": 320,
-        "y": 280,
-        "wires": [
-            [
-                "474c7d3b9c87cde0"
-            ]
-        ]
-    },
-    {
-        "id": "474c7d3b9c87cde0",
-        "type": "http response",
-        "z": "ea10f273fd104f07",
-        "name": "",
-        "statusCode": "200",
-        "headers": {},
-        "x": 620,
-        "y": 280,
-        "wires": []
-    },
-    {
-        "id": "a1f18bafb49ceb24",
-        "type": "http in",
-        "z": "ea10f273fd104f07",
-        "name": "",
-        "url": "/stops",
-        "method": "get",
-        "upload": false,
-        "skipBodyParsing": false,
-        "swaggerDoc": "",
-        "x": 320,
-        "y": 380,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "79498f6845801faf",
-        "type": "http in",
-        "z": "ea10f273fd104f07",
-        "name": "",
-        "url": "/buses",
-        "method": "get",
-        "upload": false,
-        "skipBodyParsing": false,
-        "swaggerDoc": "",
-        "x": 330,
-        "y": 460,
-        "wires": [
-            []
         ]
     }
 ]
