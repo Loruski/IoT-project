@@ -13,11 +13,12 @@ import random
 # load_dotenv()
 ADMIN_USERNAME = os.getenv("IOT_USERNAME")
 ADMIN_PASSWORD = os.getenv("IOT_PASSWORD")
+UPPER_NETWORK = os.getenv("NETWORK")
 
 print("Admin username:", ADMIN_USERNAME)
 print("Admin password:", ADMIN_PASSWORD)
 
-BROKER_IP = "20.0.0.20"
+BROKER_IP = f"{UPPER_NETWORK}.20"
 
 # Topics
 BUS = "bus"

@@ -1,7 +1,12 @@
+import os
+
 import requests
 from classes import Bus, Stop, CityParams
 
-API_BASE_URL = "http://20.0.0.12:5001"
+UPPER_NETWORK = os.getenv("NETWORK")
+
+API_BASE_URL = f"http://{UPPER_NETWORK}.12:5001"
+
 
 buses = []
 stops = []

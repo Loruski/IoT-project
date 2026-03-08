@@ -17,7 +17,7 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 20.0.0.0/8
+        - subnet: ${NETWORK}.0/8
 
 
 services:
@@ -32,10 +32,11 @@ services:
     environment:
       - IOT_USERNAME=${IOT_USERNAME}
       - IOT_PASSWORD=${IOT_PASSWORD}
+      - NETWORK=${NETWORK}
     container_name: smart-bus-system-sensors
     networks:
       smart-bus-system-network:
-        ipv4_address: 20.0.0.10
+        ipv4_address: ${NETWORK}.10
 
   config-api:
     build: ./config-api
@@ -44,7 +45,7 @@ services:
     container_name: smart-bus-system-config-api
     networks:
       smart-bus-system-network:
-        ipv4_address: 20.0.0.12
+        ipv4_address: ${NETWORK}.12
     ports:
       - 5001:5001
 
@@ -53,9 +54,10 @@ services:
     container_name: smart-bus-system-grafana-middleware-api
     networks:
       smart-bus-system-network:
-        ipv4_address: 20.0.0.11
+        ipv4_address: ${NETWORK}.11
     environment:
       - INFLUX_TOKEN=${INFLUX_TOKEN}
+      - NETWORK=${NETWORK}
     depends_on:
       - influxdb
       - config-api
@@ -80,7 +82,7 @@ services:
     restart: always
     networks:
       smart-bus-system-network:
-        ipv4_address: 20.0.0.20
+        ipv4_address: ${NETWORK}.20
     ports:
       - 1883:1883
 
@@ -99,13 +101,15 @@ services:
       # - MYSQLUSERNAME=root
       # - MYSQLPASSWORD=example
       - MQTT_USERNAME=${IOT_USERNAME}
-      - MQTT_PASSWORD=${IOT_PASSWORD}
+      - MQTT_PASSWORD=${IOT_PASSWORD}  
       - INFLUX_TOKEN=${INFLUX_TOKEN}
+      - MQTT_IP=${NETWORK}.20
+      - INFLUX_IP=http://${NETWORK}.40:8086
     ports:
       - "1880:1880"
     networks:
       smart-bus-system-network:
-        ipv4_address: 20.0.0.30
+        ipv4_address: ${NETWORK}.30
     volumes:
       - ./nodered/data:/data
       # - ./config.json:/system_data/config.json
@@ -131,7 +135,7 @@ services:
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUX_TOKEN}
     networks:
       smart-bus-system-network:
-        ipv4_address: 20.0.0.40
+        ipv4_address: ${NETWORK}.40
 
 
   grafana:
@@ -142,17 +146,19 @@ services:
       - influxdb
       - grafana-middleware-api
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_INSTALL_PLUGINS=volkovlabs-form-panel
-      - GF_PLUGINS_PREINSTALLED=volkovlabs-form-panel, grafana-infinity-datasource
+      - GF_SECURITY_ADMIN_USER=${IOT_USERNAME}
+      - GF_SECURITY_ADMIN_PASSWORD=${IOT_PASSWORD}
+      - GF_INSTALL_PLUGINS=volkovlabs-form-panel,yesoreyeram-infinity-datasource
+      - GF_PLUGINS_PREINSTALLED=volkovlabs-form-panel
+      # - NETWORK=http://21.0.0.11:5000/getStops
     ports:
       - 3000:3000
     volumes:
       - ./grafana:/var/lib/grafana
+      # - ./grafana/conf:/etc/grafana
     networks:
       smart-bus-system-network:
-        ipv4_address: 20.0.0.50
+        ipv4_address: ${NETWORK}.50
 
   # openfire:
   #   container_name: se4iot-openfire

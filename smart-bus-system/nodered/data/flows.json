@@ -26,7 +26,7 @@
         "usetls": false,
         "tls": "",
         "influxdbVersion": "2.0",
-        "url": "http://20.0.0.40:8086",
+        "url": "${INFLUX_IP}",
         "timeout": 10,
         "rejectUnauthorized": true
     },
@@ -34,7 +34,7 @@
         "id": "9adb1e1455e547d7",
         "type": "mqtt-broker",
         "name": "",
-        "broker": "20.0.0.20",
+        "broker": "${MQTT_IP}",
         "port": 1883,
         "clientid": "",
         "autoConnect": true,
@@ -60,6 +60,18 @@
         "willMsg": {},
         "userProps": "",
         "sessionExpiry": ""
+    },
+    {
+        "id": "16e4f16f27d114bb",
+        "type": "global-config",
+        "env": [
+            {
+                "name": "network_var",
+                "value": "$NETWORK",
+                "type": "env"
+            }
+        ],
+        "modules": {}
     },
     {
         "id": "f245b2357094f440",

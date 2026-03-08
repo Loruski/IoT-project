@@ -10,7 +10,8 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 bucket = "smart"
 org = "univaq"
 token = os.getenv("INFLUX_TOKEN")
-url="http://20.0.0.40:8086"
+UPPER_NETWORK = os.getenv("NETWORK")
+url= f"http://{UPPER_NETWORK}.40:8086"
 
 client = influxdb_client.InfluxDBClient(
    url=url,
@@ -23,9 +24,7 @@ CORS(app)
 app.json.sort_keys = False
 
 
-# Indirizzo base del config-api. 
-# Usiamo l'IP statico definito nel docker-compose.yml sulla porta 5001.
-CONFIG_API_URL = "http://20.0.0.12:5001" 
+CONFIG_API_URL = f"http://{UPPER_NETWORK}.12:5001" 
 
 @app.route('/getBuses', methods=['GET'])
 def get_buses():
@@ -49,7 +48,6 @@ def add_bus():
 def delete_bus():
     """Inoltra la richiesta di eliminazione bus al config-api inviando il payload JSON."""
     try:
-        # Passiamo il JSON ricevuto direttamente alla richiesta requests.delete
         response = requests.delete(f"{CONFIG_API_URL}/deleteBus", json=request.get_json())
         return jsonify(response.json()), response.status_code
     except requests.exceptions.RequestException as e:

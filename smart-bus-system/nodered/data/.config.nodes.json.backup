@@ -430,8 +430,8 @@
     "node-red-contrib-influxdb": {
         "name": "node-red-contrib-influxdb",
         "version": "0.7.0",
-        "local": true,
-        "user": true,
+        "local": false,
+        "user": false,
         "nodes": {
             "influxdb": {
                 "name": "influxdb",
@@ -442,16 +442,16 @@
                     "influxdb in"
                 ],
                 "enabled": true,
-                "local": true,
+                "local": false,
                 "user": false,
                 "module": "node-red-contrib-influxdb",
-                "file": "/data/node_modules/node-red-contrib-influxdb/influxdb.js"
+                "file": "/usr/src/node-red/node_modules/node-red-contrib-influxdb/influxdb.js"
             }
         }
     },
     "node-red-contrib-telegrambot": {
         "name": "node-red-contrib-telegrambot",
-        "version": "17.0.6",
+        "version": "17.1.0",
         "local": false,
         "user": false,
         "nodes": {
