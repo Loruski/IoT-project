@@ -38,6 +38,9 @@ def get_buses():
 @app.route('/addBus', methods=['POST'])
 def add_bus():
     """Inoltra la richiesta di aggiunta bus al config-api"""
+
+    print("Received addBus request with payload:", request.get_json())
+
     try:
         response = requests.post(f"{CONFIG_API_URL}/addBus", json=request.get_json())
         return jsonify(response.json()), response.status_code

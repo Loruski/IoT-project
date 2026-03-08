@@ -38,6 +38,8 @@ def add_bus():
     """Adds a new bus to the configuration"""
     data = read_data()
     new_bus = request.get_json()
+
+    print("Received request to add bus with data:", new_bus)
     
     if not new_bus or 'id' not in new_bus:
         return jsonify({"error": "Invalid bus data. 'id' is required."}), 400
@@ -94,27 +96,32 @@ def add_stop():
 
 @app.route('/deleteStop', methods=['DELETE']) # DELETE a stop by ID
 def delete_stop():
-    """Deletes a stop by its ID sent in the JSON payload"""
+    """Elimina una fermata e la rimuove dai percorsi di tutti i bus"""
    
     payload = request.get_json()
-    
-    
     stop_id = payload.get('stop_id') 
     
     if not stop_id:
         return jsonify({"error": "Nessun stop_id fornito"}), 400
 
     data = read_data()
-    initial_length = len(data['stops'])
     
-    
+    initial_stop_count = len(data['stops'])
     data['stops'] = [s for s in data['stops'] if s['id'] != stop_id]
     
-    if len(data['stops']) < initial_length:
-        write_data(data)
-        return jsonify({"message": f"Stop {stop_id} deleted successfully"}), 200
-        
-    return jsonify({"error": "Stop not found"}), 404
+    if len(data['stops']) == initial_stop_count:
+        return jsonify({"error": "Fermata non trovata"}), 404
+
+    for bus in data.get('buses', []):
+        if 'route' in bus:
+            bus['route'] = [s_id for s_id in bus['route'] if s_id != stop_id]
+    
+    # 3. Salvataggio su disco
+    write_data(data)
+    
+    return jsonify({
+        "message": f"Fermata {stop_id} eliminata correttamente e rimossa dai percorsi dei bus."
+    }), 200
 
 
 # --- Endpoints for City Params ---
