@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
 import os
+import json
+from flask import Flask, request, jsonify, Response
 import influxdb_client
 from influxdb_client.client.write_api import SYNCHRONOUS
 
@@ -18,6 +20,7 @@ client = influxdb_client.InfluxDBClient(
 
 app = Flask(__name__)
 CORS(app)
+app.json.sort_keys = False
 
 
 # Indirizzo base del config-api. 
@@ -57,8 +60,14 @@ def delete_bus():
 def get_stops():
     """Richiede la lista degli stop al config-api"""
     try:
+        stop_info = []
         response = requests.get(f"{CONFIG_API_URL}/getStops")
-        return jsonify(response.json()), response.status_code
+        for stop in response.json():
+            stop_info.append(get_last_influx_stop_info(stop))
+            
+        json_string = json.dumps(stop_info)
+        return Response(json_string, mimetype='application/json'), response.status_code
+
     except requests.exceptions.RequestException as e:
         return jsonify({"error": f"Errore di comunicazione con config-api: {e}"}), 500
 
@@ -81,6 +90,50 @@ def delete_stop():
         return jsonify({"error": f"Errore di comunicazione con config-api: {e}"}), 500
     
 # --- Influx DB functions ---
+
+def get_last_influx_stop_info(stop):
+    """Recupera le ultime informazioni di un bus da InfluxDB con una singola query."""
+    query_api = client.query_api()
+    
+    query = f'''
+    from(bucket: "{bucket}")
+        |> range(start: -1h)
+        |> filter(fn: (r) => r["_measurement"] == "busStop")
+        |> filter(fn: (r) => r["bus_stop"] == "{stop['id']}")
+        |> filter(fn: (r) => r["_field"] == "people" or r["_field"] == "rain" or r["_field"] == "temp")
+        |> last()
+        |> pivot(rowKey:["bus_stop"], columnKey: ["_field"], valueColumn: "_value")
+    '''
+
+    result = query_api.query(org=org, query=query)
+
+    returnStop = {
+        'id': str(stop['id']),
+        'name': str(stop['name']),
+        'people': None,
+        'rain': None,
+        'temp': None,
+        'latitude': float(stop['lat']),
+        'longitude': float(stop['lon'])
+    }
+
+
+    if result and len(result) > 0 and len(result[0].records) > 0:
+        record = result[0].records[0]
+        
+        people_val = record.values.get("people")
+        rain_val = record.values.get("rain")
+        temp_val = record.values.get("temp")
+        
+        if people_val is not None:
+            returnStop['people'] = int(people_val)
+        if rain_val is not None:
+            returnStop['rain'] = float(rain_val)
+        if temp_val is not None:
+            returnStop['temp'] = float(temp_val)
+
+    return returnStop
+    
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=5000)
