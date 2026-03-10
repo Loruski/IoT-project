@@ -340,7 +340,7 @@
         "type": "function",
         "z": "fedad3d5513a812d",
         "name": "export for influx",
-        "func": "\nlet fields = {\n    stop: msg.payload.current_stop,\n};\n\n\nlet tags = {\n    bus_id: msg.tags ? msg.tags.bus_id : msg.topic \n};\n\n\nmsg.payload = [fields, tags];\n\n\nif (msg.timestamp) {\n    msg.timestamp = new Date(msg.timestamp);\n}\n\nreturn msg;",
+        "func": "\nlet fields = {\n    current_stop: msg.payload.current_stop,\n    current_capacity: msg.payload.current_capacity,\n    status: msg.payload.status\n};\n\n\nlet tags = {\n    bus_id: msg.tags ? msg.tags.bus_id : msg.topic \n};\n\n\nmsg.payload = [fields, tags];\n\n\nif (msg.timestamp) {\n    msg.timestamp = new Date(msg.timestamp);\n}\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -369,7 +369,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 210,
-        "y": 960,
+        "y": 980,
         "wires": [
             [
                 "24ae5583e778b8e7"
@@ -381,7 +381,7 @@
         "type": "mqtt in",
         "z": "fedad3d5513a812d",
         "name": "",
-        "topic": "bus/+/people",
+        "topic": "bus/+/current_capacity",
         "qos": "0",
         "datatype": "auto-detect",
         "broker": "9adb1e1455e547d7",
@@ -389,7 +389,7 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 210,
+        "x": 240,
         "y": 1040,
         "wires": [
             [

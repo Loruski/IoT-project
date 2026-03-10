@@ -147,9 +147,9 @@ def get_last_influx_bus_info(bus):
     query = f'''
     from(bucket: "{bucket}")
         |> range(start: -1h)
-        |> filter(fn: (r) => r["_measurement"] == "busInfo")
+        |> filter(fn: (r) => r["_measurement"] == "autobus")
         |> filter(fn: (r) => r["bus_id"] == "{bus['id']}")
-        |> filter(fn: (r) => r["_field"] == "people" or r["_field"] == "status" or r["_field"] == "current_stop")
+        |> filter(fn: (r) => r["_field"] == "current_capacity" or r["_field"] == "status" or r["_field"] == "current_stop")
         |> last()
         |> pivot(rowKey:["bus_id"], columnKey: ["_field"], valueColumn: "_value")
     '''
@@ -162,6 +162,8 @@ def get_last_influx_bus_info(bus):
         'people': None,
         'status': None,
         'current_stop': None,
+        'lat': None,
+        'lon': None,
         'route': bus.get('route', []),
     }
 
@@ -169,7 +171,7 @@ def get_last_influx_bus_info(bus):
     if result and len(result) > 0 and len(result[0].records) > 0:
         record = result[0].records[0]
         
-        people_val = record.values.get("people")
+        people_val = record.values.get("current_capacity")
         status_val = record.values.get("status")
         current_stop_val = record.values.get("current_stop")
         
@@ -179,6 +181,13 @@ def get_last_influx_bus_info(bus):
             returnBus['status'] = str(status_val)
         if current_stop_val is not None:
             returnBus['current_stop'] = str(current_stop_val)
+            response = requests.get(f"{CONFIG_API_URL}/getStops")
+            for stop in response.json():
+                if stop['id'] == current_stop_val:
+                    returnBus['lat'] = float(stop['lat'])
+                    returnBus['lon'] = float(stop['lon'])
+                    break
+
 
     return returnBus
     

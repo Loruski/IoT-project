@@ -27,6 +27,7 @@ services:
     depends_on:
       - mosquitto
       - config-api
+      - grafana-middleware-api
     # volumes:
     #   - ./config.json:/config.json
     environment:

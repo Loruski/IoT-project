@@ -46,7 +46,7 @@ def add_bus():
         
     data['buses'].append(new_bus)
     write_data(data)
-    return jsonify({"message": "Bus added successfully", "bus": new_bus}), 201
+    return jsonify({"message": "Bus added successfully", "bus": new_bus}), 200
 
 @app.route('/deleteBus', methods=['DELETE']) # DELETE a bus by ID in payload
 def delete_bus():

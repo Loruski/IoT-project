@@ -8,8 +8,12 @@ class Bus:
     def __init__(self, id, route, capacity):
         self.id = id
         self.route:list[Stop] = route
+        self.people:int = 0
         self.capacity:int = capacity
         self.currentStop:Stop | None = None
+        self.status = busError.OK
+
+
 
 
 class Stop:
@@ -21,3 +25,12 @@ class Stop:
         self.people:int = -1
         self.rain:float = -1
         self.temp:float = -254.0
+
+from enum import Enum
+class busError(Enum):
+    OK = "OK"
+    TIRES = "TIRES_LOW"
+    FUEL = "FUEL_LOW"
+    FAILURE = "FAILURE"
+    
+    

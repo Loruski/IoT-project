@@ -3,7 +3,7 @@ import time
 import os
 import paho.mqtt.client as mqtt
 import json
-from classes import Bus, Stop 
+from classes import Bus, Stop, busError 
 from dotenv import load_dotenv
 from configReader import read_buses_config, read_city_params, read_stop_config, reload_buses, reload_stops
 import configReader
@@ -109,6 +109,16 @@ def dice_roll_people_at_stop(rain_factor, global_temp, current_people=-1):
     return max(0, min(new_people, 100))
 
 
+def dice_roll_bus_status():
+    roll = random.random()
+    if (roll < 0.1):
+        return busError.TIRES
+    elif (0.1 <= roll < 0.25):
+        return busError.FUEL
+    elif (0.25 <= roll < 0.3):
+        return busError.FAILURE
+    return busError.OK
+
 
 
 if __name__ == "__main__":
@@ -148,6 +158,26 @@ if __name__ == "__main__":
             print(stop.name, ":", stop.temp, stop.rain, stop.people)
 
         for bus in buses:
+            if (bus.status == busError.FAILURE):
+                if (random.random() < 0.1):
+                    bus.status = busError.OK
+                continue
+            if (bus.status == busError.FUEL):
+                if (random.random() < 0.3):
+                    bus.status = busError.OK
+            if (bus.status == busError.TIRES):
+                if (random.random() < 0.2):
+                    bus.status = busError.OK
+  
+            bus.status = dice_roll_bus_status()
+            mqttc.publish(f"{BUS}/{bus.id}/{STATUS}", json.dumps({"value": bus.status.value, "timestamp": time.time()}), qos=0)
+   
+            
+            
+            bus.people = int(random.gauss(bus.capacity, bus.capacity / 10))
+            mqttc.publish(f"{BUS}/{bus.id}/{CURRENT_CAPACITY}", json.dumps({"value": bus.people, "timestamp": time.time()}), qos=0)
+            
+
             if len(bus.route) == 0:
                 continue
             if bus.currentStop == None:
