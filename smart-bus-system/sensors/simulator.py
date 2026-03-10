@@ -148,6 +148,8 @@ if __name__ == "__main__":
             print(stop.name, ":", stop.temp, stop.rain, stop.people)
 
         for bus in buses:
+            if len(bus.route) == 0:
+                continue
             if bus.currentStop == None:
                 bus.currentStop = bus.route[0]
             elif dice_roll_next_stop(global_temp, rain_factor):
