@@ -8,14 +8,6 @@
         "env": []
     },
     {
-        "id": "ea10f273fd104f07",
-        "type": "tab",
-        "label": "grafana api",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
         "id": "fd924e876cf2964c",
         "type": "influxdb",
         "hostname": "127.0.0.1",
@@ -364,64 +356,45 @@
         ]
     },
     {
-        "id": "6d9fea25d08f564f",
-        "type": "http in",
-        "z": "ea10f273fd104f07",
+        "id": "137d6b4fd2c19d93",
+        "type": "mqtt in",
+        "z": "fedad3d5513a812d",
         "name": "",
-        "url": "/test",
-        "method": "get",
-        "upload": false,
-        "skipBodyParsing": false,
-        "swaggerDoc": "",
-        "x": 320,
-        "y": 280,
+        "topic": "bus/+/status",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "9adb1e1455e547d7",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 1000,
         "wires": [
             [
-                "474c7d3b9c87cde0"
+                "24ae5583e778b8e7"
             ]
         ]
     },
     {
-        "id": "474c7d3b9c87cde0",
-        "type": "http response",
-        "z": "ea10f273fd104f07",
+        "id": "67e1f643f4ea8997",
+        "type": "mqtt in",
+        "z": "fedad3d5513a812d",
         "name": "",
-        "statusCode": "200",
-        "headers": {},
-        "x": 620,
-        "y": 280,
-        "wires": []
-    },
-    {
-        "id": "a1f18bafb49ceb24",
-        "type": "http in",
-        "z": "ea10f273fd104f07",
-        "name": "",
-        "url": "/stops",
-        "method": "get",
-        "upload": false,
-        "skipBodyParsing": false,
-        "swaggerDoc": "",
-        "x": 320,
-        "y": 380,
+        "topic": "bus/+/people",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "9adb1e1455e547d7",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 1080,
         "wires": [
-            []
-        ]
-    },
-    {
-        "id": "79498f6845801faf",
-        "type": "http in",
-        "z": "ea10f273fd104f07",
-        "name": "",
-        "url": "/buses",
-        "method": "get",
-        "upload": false,
-        "skipBodyParsing": false,
-        "swaggerDoc": "",
-        "x": 330,
-        "y": 460,
-        "wires": [
-            []
+            [
+                "24ae5583e778b8e7"
+            ]
         ]
     }
 ]

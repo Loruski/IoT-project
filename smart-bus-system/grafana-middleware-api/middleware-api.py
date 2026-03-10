@@ -30,8 +30,13 @@ CONFIG_API_URL = f"http://{UPPER_NETWORK}.12:5001"
 def get_buses():
     """Richiede la lista dei bus al config-api"""
     try:
+        bus_info = []
         response = requests.get(f"{CONFIG_API_URL}/getBuses")
-        return jsonify(response.json()), response.status_code
+        for bus in response.json():
+            bus_info.append(get_last_influx_bus_info(bus))
+
+        json_string = json.dumps(bus_info)
+        return Response(json_string, mimetype='application/json'), response.status_code
     except requests.exceptions.RequestException as e:
         return jsonify({"error": f"Errore di comunicazione con config-api: {e}"}), 500
 
@@ -134,6 +139,48 @@ def get_last_influx_stop_info(stop):
             returnStop['temp'] = float(temp_val)
 
     return returnStop
+
+def get_last_influx_bus_info(bus):
+    """Recupera le ultime informazioni di un bus da InfluxDB con una singola query."""
+    query_api = client.query_api()
+    
+    query = f'''
+    from(bucket: "{bucket}")
+        |> range(start: -1h)
+        |> filter(fn: (r) => r["_measurement"] == "busInfo")
+        |> filter(fn: (r) => r["bus_id"] == "{bus['id']}")
+        |> filter(fn: (r) => r["_field"] == "people" or r["_field"] == "status" or r["_field"] == "current_stop")
+        |> last()
+        |> pivot(rowKey:["bus_id"], columnKey: ["_field"], valueColumn: "_value")
+    '''
+
+    result = query_api.query(org=org, query=query)
+
+    returnBus = {
+        'id': str(bus['id']),
+        'capacity': int(bus['capacity']),
+        'people': None,
+        'status': None,
+        'current_stop': None,
+        'route': bus.get('route', []),
+    }
+
+
+    if result and len(result) > 0 and len(result[0].records) > 0:
+        record = result[0].records[0]
+        
+        people_val = record.values.get("people")
+        status_val = record.values.get("status")
+        current_stop_val = record.values.get("current_stop")
+        
+        if people_val is not None:
+            returnBus['people'] = int(people_val)
+        if status_val is not None:
+            returnBus['status'] = str(status_val)
+        if current_stop_val is not None:
+            returnBus['current_stop'] = str(current_stop_val)
+
+    return returnBus
     
 
 if __name__ == '__main__':

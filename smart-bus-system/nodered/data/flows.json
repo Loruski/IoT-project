@@ -151,7 +151,7 @@
         "type": "function",
         "z": "fedad3d5513a812d",
         "name": "extract id",
-        "func": "let data = msg.payload;\n\n// 1. Forza la conversione in oggetto se non lo è già\nif (typeof data === 'string') {\n    try {\n        data = JSON.parse(data);\n    } catch (e) {\n        node.error(\"Errore nel parsing JSON: \" + e.message);\n        return null;\n    }\n}\n\nlet array = msg.topic.split(\"/\");\nlet stopId = array[1];   // \"Stop1\", \"Stop4\", ecc.\nlet sensorType = array[2]; // \"temp\", \"rain\", ecc.\n\n// 2. Controllo sicurezza per evitare 'undefined'\nif (data && data.hasOwnProperty('value')) {\n    // Prepariamo il payload per il nodo Join\n    msg.payload = {\n        [sensorType]: data.value,\n        timestamp: data.timestamp\n    };\n\n    // 3. AGGIUNGIAMO I TAG PER INFLUXDB\n    // Questo creerà una colonna \"bus_stop\" nel tuo database Influx\n    msg.tags = {\n        bus_stop: stopId\n    };\n\n    // Impostiamo il topic per il raggruppamento del nodo Join\n    msg.topic = stopId;\n\n    return msg;\n} else {\n    node.warn(\"Payload non contiene 'value': \" + JSON.stringify(data));\n    return null;\n}",
+        "func": "let data = msg.payload;\n\n\nif (typeof data === 'string') {\n    try {\n        data = JSON.parse(data);\n    } catch (e) {\n        node.error(\"Errore nel parsing JSON: \" + e.message);\n        return null;\n    }\n}\n\nlet array = msg.topic.split(\"/\");\nlet stopId = array[1];   // \"Stop1\", \"Stop4\", ecc.\nlet sensorType = array[2]; // \"temp\", \"rain\", ecc.\n\nif (data && data.hasOwnProperty('value')) {\n\n    msg.payload = {\n        [sensorType]: data.value,\n        timestamp: data.timestamp\n    };\n\n    //  TAG PER INFLUXDB\n    msg.tags = {\n        bus_stop: stopId\n    };\n\n    msg.topic = stopId;\n\n    return msg;\n} else {\n    node.warn(\"Payload non contiene 'value': \" + JSON.stringify(data));\n    return null;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -275,7 +275,7 @@
         "type": "function",
         "z": "fedad3d5513a812d",
         "name": "extract id",
-        "func": "let data = msg.payload;\n\n// 1. Forza la conversione in oggetto se non lo è già\nif (typeof data === 'string') {\n    try {\n        data = JSON.parse(data);\n    } catch (e) {\n        node.error(\"Errore nel parsing JSON: \" + e.message);\n        return null;\n    }\n}\n\nlet array = msg.topic.split(\"/\");\nlet stopId = array[1];   // \"Stop1\", \"Stop4\", ecc.\nlet sensorType = array[2]; // \"temp\", \"rain\", ecc.\n\n// 2. Controllo sicurezza per evitare 'undefined'\nif (data && data.hasOwnProperty('value')) {\n    // Prepariamo il payload per il nodo Join\n    msg.payload = {\n        [sensorType]: data.value,\n        timestamp: data.timestamp\n    };\n\n    // 3. AGGIUNGIAMO I TAG PER INFLUXDB\n    // Questo creerà una colonna \"bus_stop\" nel tuo database Influx\n    msg.tags = {\n        bus_stop: stopId\n    };\n\n    // Impostiamo il topic per il raggruppamento del nodo Join\n    msg.topic = stopId;\n\n    return msg;\n} else {\n    node.warn(\"Payload non contiene 'value': \" + JSON.stringify(data));\n    return null;\n}",
+        "func": "let data = msg.payload;\n\nif (typeof data === 'string') {\n    try {\n        data = JSON.parse(data);\n    } catch (e) {\n        node.error(\"Errore nel parsing JSON: \" + e.message);\n        return null;\n    }\n}\n\nlet array = msg.topic.split(\"/\");\nlet busId = array[1];   \nlet sensorType = array[2];\n\n\nif (data && data.hasOwnProperty('value')) {\n\n    msg.payload = {\n        [sensorType]: data.value,\n        timestamp: data.timestamp\n    };\n\n    //TAG PER INFLUXDB\n    msg.tags = {\n        bus_id: busId\n    };\n\n\n    msg.topic = busId;\n\n    return msg;\n} else {\n    node.warn(\"Payload non contiene 'value': \" + JSON.stringify(data));\n    return null;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -352,6 +352,48 @@
         "wires": [
             [
                 "23b4225ef0ebb4b3"
+            ]
+        ]
+    },
+    {
+        "id": "137d6b4fd2c19d93",
+        "type": "mqtt in",
+        "z": "fedad3d5513a812d",
+        "name": "",
+        "topic": "bus/+/status",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "9adb1e1455e547d7",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 1000,
+        "wires": [
+            [
+                "24ae5583e778b8e7"
+            ]
+        ]
+    },
+    {
+        "id": "67e1f643f4ea8997",
+        "type": "mqtt in",
+        "z": "fedad3d5513a812d",
+        "name": "",
+        "topic": "bus/+/people",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "9adb1e1455e547d7",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 1080,
+        "wires": [
+            [
+                "24ae5583e778b8e7"
             ]
         ]
     }
