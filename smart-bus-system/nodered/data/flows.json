@@ -216,7 +216,7 @@
         "type": "function",
         "z": "fedad3d5513a812d",
         "name": "export for influx",
-        "func": "// Prendi i dati dei sensori (Fields)\nlet fields = {\n    temp: msg.payload.temp,\n    rain: msg.payload.rain,\n    people: msg.payload.people\n};\n\n// Definisci i metadati (Tags)\n// Usiamo msg.tags.bus_stop oppure msg.topic se contiene il nome della fermata\nlet tags = {\n    bus_stop: msg.tags ? msg.tags.bus_stop : msg.topic \n};\n\n// Formatta il payload come richiesto dalla documentazione: [fields, tags]\nmsg.payload = [fields, tags];\n\n// Opzionale: Se vuoi mantenere il timestamp originale del sensore\nif (msg.timestamp) {\n    msg.timestamp = new Date(msg.timestamp);\n}\n\nreturn msg;",
+        "func": "\nlet fields = {\n    temp: msg.payload.temp,\n    rain: msg.payload.rain,\n    people: msg.payload.people\n};\n\n\nlet tags = {\n    bus_stop: msg.tags ? msg.tags.bus_stop : msg.topic \n};\n\n\nmsg.payload = [fields, tags];\n\n\nif (msg.timestamp) {\n    msg.timestamp = new Date(msg.timestamp);\n}\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -305,7 +305,7 @@
         "useparts": false,
         "accumulate": true,
         "timeout": "",
-        "count": "1",
+        "count": "3",
         "reduceRight": false,
         "reduceExp": "",
         "reduceInit": "",
@@ -340,7 +340,7 @@
         "type": "function",
         "z": "fedad3d5513a812d",
         "name": "export for influx",
-        "func": "// Prendi i dati dei sensori (Fields)\nlet fields = {\n    stop: msg.payload.current_stop,\n};\n\n// Definisci i metadati (Tags)\n// Usiamo msg.tags.bus_stop oppure msg.topic se contiene il nome della fermata\nlet tags = {\n    bus_stop: msg.tags ? msg.tags.bus_stop : msg.topic \n};\n\n// Formatta il payload come richiesto dalla documentazione: [fields, tags]\nmsg.payload = [fields, tags];\n\n// Opzionale: Se vuoi mantenere il timestamp originale del sensore\nif (msg.timestamp) {\n    msg.timestamp = new Date(msg.timestamp);\n}\n\nreturn msg;",
+        "func": "\nlet fields = {\n    stop: msg.payload.current_stop,\n};\n\n\nlet tags = {\n    bus_id: msg.tags ? msg.tags.bus_id : msg.topic \n};\n\n\nmsg.payload = [fields, tags];\n\n\nif (msg.timestamp) {\n    msg.timestamp = new Date(msg.timestamp);\n}\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -369,7 +369,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 210,
-        "y": 1000,
+        "y": 960,
         "wires": [
             [
                 "24ae5583e778b8e7"
@@ -390,7 +390,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 210,
-        "y": 1080,
+        "y": 1040,
         "wires": [
             [
                 "24ae5583e778b8e7"
