@@ -10,7 +10,7 @@ FILE_PATH = 'config.json'
 def read_data():
     """Reads the JSON file and returns the data"""
     if not os.path.exists(FILE_PATH):
-        # Return a default structure if the file doesn't exist
+
         return {"city_params": {}, "buses": [], "stops": []}
     with open(FILE_PATH, 'r') as f:
         return json.load(f)
@@ -62,7 +62,7 @@ def delete_bus():
     data = read_data()
     initial_length = len(data['buses'])
     
-    # Filter out the bus with the matching ID
+
     data['buses'] = [b for b in data['buses'] if b['id'] != bus_id]
     
     if len(data['buses']) < initial_length:
@@ -116,7 +116,7 @@ def delete_stop():
         if 'route' in bus:
             bus['route'] = [s_id for s_id in bus['route'] if s_id != stop_id]
     
-    # 3. Salvataggio su disco
+
     write_data(data)
     
     return jsonify({
@@ -131,7 +131,7 @@ def update_city_params():
     data = read_data()
     new_params = request.get_json()
     
-    # Update the values in the existing city_params
+
     data['city_params'] = new_params
     write_data(data)
     

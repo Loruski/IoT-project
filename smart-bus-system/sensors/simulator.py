@@ -89,15 +89,12 @@ def dice_roll_people_at_stop(rain_factor, global_temp, current_people=-1):
     Uses a normal distribution for more realistic population fluctuations.
     """
     if current_people == -1:
-        # Initial state: Normal distribution centered at 10
+
         return max(0, int(random.gauss(10, 5)))
-    
-    # Base change using a normal distribution (mean 0, std_dev 2)
-    # This makes small changes more likely than large jumps
+
     change = random.gauss(0, 2)
     
-    # Environmental impact: shift the mean of the distribution
-    # If it's raining or extreme temperature, the mean shift increases
+
     if rain_factor > 0.5:
         change += random.uniform(0.5, 2.5)
     if global_temp > 30 or global_temp < 5:
@@ -105,17 +102,16 @@ def dice_roll_people_at_stop(rain_factor, global_temp, current_people=-1):
         
     new_people = int(current_people + change)
     
-    # Ensure people count is non-negative and within a reasonable limit
     return max(0, min(new_people, 100))
 
 
 def dice_roll_bus_status():
     roll = random.random()
-    if (roll < 0.1):
+    if (roll < 0.05):
         return busError.TIRES
-    elif (0.1 <= roll < 0.25):
+    elif (0.05 <= roll < 0.15):
         return busError.FUEL
-    elif (0.25 <= roll < 0.3):
+    elif (0.15 <= roll < 0.16):
         return busError.FAILURE
     return busError.OK
 
@@ -147,7 +143,6 @@ if __name__ == "__main__":
             stop.rain = dice_roll_rain_at_stop(rain_factor, stop.rain)
             stop.people = dice_roll_people_at_stop(stop.rain, stop.temp, stop.people)
 
-            # Publish stop data to MQTT
             mqttc.publish(f"{STOP}/{stop.id}/{TEMP}", json.dumps({"value": stop.temp, "timestamp": time.time()}), qos=0)
 
             mqttc.publish(f"{STOP}/{stop.id}/{RAIN}", json.dumps({"value": stop.rain, "timestamp": time.time()}), qos=0)
@@ -172,9 +167,14 @@ if __name__ == "__main__":
             bus.status = dice_roll_bus_status()
             mqttc.publish(f"{BUS}/{bus.id}/{STATUS}", json.dumps({"value": bus.status.value, "timestamp": time.time()}), qos=0)
    
+            crowded = True if random.random() <= 0.2  else False
             
+            if (crowded):
+                bus.people = int(random.gauss(bus.capacity, bus.capacity / 10))
+            else:
+                bus.people = int(random.gauss(bus.capacity / 2, bus.capacity / 7))
             
-            bus.people = int(random.gauss(bus.capacity, bus.capacity / 10))
+
             mqttc.publish(f"{BUS}/{bus.id}/{CURRENT_CAPACITY}", json.dumps({"value": bus.people, "timestamp": time.time()}), qos=0)
             
 
@@ -187,8 +187,7 @@ if __name__ == "__main__":
                     bus.currentStop = bus.route[0]
                 else:
                     bus.currentStop = bus.route[bus.route.index(bus.currentStop) + 1]
-            
-            # Publish bus data to MQTT
+
             mqttc.publish(f"{BUS}/{bus.id}/{CURRENT_STOP}", json.dumps({"value": bus.currentStop.id, "timestamp": time.time()}), qos=0)
             # ---
             print(bus.id, bus.currentStop.name)

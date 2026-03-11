@@ -1,17 +1,3 @@
-# Use root/example as user/password credentials
-# configs:
-#   system_config:
-#     file: ./config.json
-  
-# volumes:
-#   smart-bus-volume:
-#   driver: local 
-#   driver_opts: 
-#     o: 
-#       bind type: none
-#       device: /path/to/files/on/host
-
-
 networks:
   smart-bus-system-network:
     driver: bridge
@@ -28,8 +14,6 @@ services:
       - mosquitto
       - config-api
       - grafana-middleware-api
-    # volumes:
-    #   - ./config.json:/config.json
     environment:
       - IOT_USERNAME=${IOT_USERNAME}
       - IOT_PASSWORD=${IOT_PASSWORD}
@@ -76,7 +60,6 @@ services:
       - IOT_USERNAME=${IOT_USERNAME}
       - IOT_PASSWORD=${IOT_PASSWORD}
     volumes:
-    # - ./mosquitto/config/mosquitto.passwd:/mosquitto/config/mosquitto.passwd
     - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
     - ./mosquitto/log:/mosquitto/log
     - ./mosquitto/data/:/mosquitto/data
@@ -99,8 +82,6 @@ services:
     image: nodered/node-red:latest
     environment:
       - TZ=Europe/Rome
-      # - MYSQLUSERNAME=root
-      # - MYSQLPASSWORD=example
       - MQTT_USERNAME=${IOT_USERNAME}
       - MQTT_PASSWORD=${IOT_PASSWORD}  
       - INFLUX_TOKEN=${INFLUX_TOKEN}
@@ -113,7 +94,6 @@ services:
         ipv4_address: ${NETWORK}.30
     volumes:
       - ./nodered/data:/data
-      # - ./config.json:/system_data/config.json
 
 
   
@@ -123,9 +103,6 @@ services:
     image: influxdb:2.7.4
     ports:
       - 8086:8086
-    #volumes:
-      # - ./influxdb/data:/var/lib/influxdb2
-      # - ./influxdb/config:/etc/influxdb2
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=${IOT_USERNAME}
@@ -158,34 +135,10 @@ services:
       - GF_SMTP_FROM_ADDRESS=${MAIL_LOGIN}
       - GF_SMTP_FROM_NAME=SmartBusSystem
       - GF_SMTP_STARTTLS_POLICY=MandatoryStartTLS
-      # - NETWORK=http://21.0.0.11:5000/getStops
     ports:
       - 3000:3000
     volumes:
       - ./grafana:/var/lib/grafana
-      # - ./grafana/conf:/etc/grafana
     networks:
       smart-bus-system-network:
-        ipv4_address: ${NETWORK}.50
-
-  # openfire:
-  #   container_name: se4iot-openfire
-  #   build:
-  #     context: ./openfire/
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "9090:9090"
-  #     - "9091:9091"
-  #     - "5222:5222"
-  #     - "5269:5269"
-  #   networks:
-  #     se4iot-network:
-  #       ipv4_address: 20.0.0.106
-  #   volumes:
-  #     - ./openfire/data/conf:/opt/openfire/conf
-  # #    - ./openfire/data/logs:/opt/openfire/logs
-  #     - ./openfire/data/embedded-db:/opt/openfire/embedded-db
-  #     - ./openfire/data/resources:/opt/openfire/resources
-  # #    - ./openfire/data/plugins:/opt/openfire/plugins
-  #   hostname: localhost 
-  #   restart: unless-stopped
+        ipv4_address: ${NETWORK}.50 
