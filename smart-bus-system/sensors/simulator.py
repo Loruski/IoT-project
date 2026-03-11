@@ -35,10 +35,8 @@ CURRENT_CAPACITY = "current_capacity"
 STATUS = "status"
 
 # Topic structure:
-# For stops: stop/{stop_id}/{sensor_type}/value
-#            stop/{stop_id}/{sensor_type}/timestamp
-# For buses: bus/{bus_id}/{sensor_type}/value
-#            bus/{bus_id}/{sensor_type}/timestamp
+# For stops: stop/{stop_id}/{sensor_type}/
+# For buses: bus/{bus_id}/{sensor_type}/
 
 
 
