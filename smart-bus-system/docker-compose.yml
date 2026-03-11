@@ -151,6 +151,13 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin # ^
       - GF_INSTALL_PLUGINS=volkovlabs-form-panel,yesoreyeram-infinity-datasource
       - GF_PLUGINS_PREINSTALLED=volkovlabs-form-panel
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_HOST=smtp.mailersend.net:587
+      - GF_SMTP_USER=${MAIL_LOGIN}
+      - GF_SMTP_PASSWORD=${MAIL_KEY}
+      - GF_SMTP_FROM_ADDRESS=${MAIL_LOGIN}
+      - GF_SMTP_FROM_NAME=SmartBusSystem
+      - GF_SMTP_STARTTLS_POLICY=MandatoryStartTLS
       # - NETWORK=http://21.0.0.11:5000/getStops
     ports:
       - 3000:3000

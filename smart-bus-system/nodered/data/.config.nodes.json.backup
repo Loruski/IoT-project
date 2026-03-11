@@ -1,7 +1,7 @@
 {
     "node-red": {
         "name": "node-red",
-        "version": "4.1.6",
+        "version": "4.1.7",
         "local": false,
         "user": false,
         "nodes": {
@@ -451,7 +451,7 @@
     },
     "node-red-contrib-telegrambot": {
         "name": "node-red-contrib-telegrambot",
-        "version": "17.0.6",
+        "version": "17.1.0",
         "local": false,
         "user": false,
         "nodes": {
@@ -567,6 +567,36 @@
                 "user": false,
                 "module": "node-red-contrib-merge-topic",
                 "file": "/data/node_modules/node-red-contrib-merge-topic/17-merge.js"
+            }
+        }
+    },
+    "openapi-red": {
+        "name": "openapi-red",
+        "version": "2.8.0",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "openApi-red": {
+                "name": "openApi-red",
+                "types": [
+                    "openApi-red"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "openapi-red",
+                "file": "/data/node_modules/openapi-red/src/openapi.js"
+            },
+            "openApi-red-url": {
+                "name": "openApi-red-url",
+                "types": [
+                    "openApi-red-url"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "openapi-red",
+                "file": "/data/node_modules/openapi-red/src/config.js"
             }
         }
     }

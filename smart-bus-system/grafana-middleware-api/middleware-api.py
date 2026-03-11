@@ -39,7 +39,7 @@ def get_buses():
         return Response(json_string, mimetype='application/json'), response.status_code
     except requests.exceptions.RequestException as e:
         return jsonify({"error": f"Errore di comunicazione con config-api: {e}"}), 500
-
+    
 @app.route('/addBus', methods=['POST'])
 def add_bus():
     """Inoltra la richiesta di aggiunta bus al config-api"""
