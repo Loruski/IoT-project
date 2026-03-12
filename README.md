@@ -14,7 +14,6 @@ MAIL_KEY="xxx.xxx.xxx.xxx" #(for the mailing service )
 MAIL_LOGIN = "xxx@xxx.xxx.xxx"
 ```
 
-> Beware, the network still needs to be edited manually in grafana, as it doesn't support environment variables
 
 ### Config file
 A config json file is specified and necessary in order for the sensor simulator to work and generate data to forward through the pipeline, the JSON format is as follows:
@@ -27,7 +26,7 @@ A config json file is specified and necessary in order for the sensor simulator 
   },
   "buses": [ // JSON-array of buses
     {
-      "id": "B1", // UNIQUE identifier
+      "id": "B1", // UNIQUE identifier and name
       "route": [ // list of IDs of stops in order of travel (when arrived at last stop, it loops)
         "Stop4",
         "Stop2",
@@ -81,6 +80,8 @@ The api is created in python using Flask
     - People waiting for the bus
 
 ```py
+# Constants to easly format the topics adresses
+
 # Topics
 BUS = "bus"
 STOP = "stop"
@@ -98,14 +99,14 @@ STATUS = "status"
 
 The topics have the following structure:
 - `stop/{stop_id}/{sensor_type}/`
-- `bus/{bus_id}/{sensor_type}`
+- `bus/{bus_id}/{sensor_type}/`
 
 The `Bus Status` and the `People inside the bus` quantities are used to create alerts
 
 ### Mosquitto
 
-The mosquitto server for hosting the MQTT broker is configured through the mosquitto.conf file in the directory `mosquitto/config` and authentication is enabled through the declaration of the line ```password_file /mosquitto/config/mosquitto.passwd```.
-The mosquitto.passwd file is generated at build-time through the Dockerfile command:
+The mosquitto server for hosting the MQTT broker is configured through the ``mosquitto.conf`` file in the directory `mosquitto/config` and authentication is enabled through the declaration of the line ```password_file /mosquitto/config/mosquitto.passwd```.
+The `mosquitto.passwd` file is generated at build-time through the Dockerfile command:
 
 ```Dockerfile
 RUN mosquitto_passwd -b -c /mosquitto/config/mosquitto.passwd $IOT_USERNAME $IOT_PASSWORD
@@ -115,7 +116,10 @@ Using the already specified username and password in the .env file.
 
 ### Middleware API
 
-The middleware is an api with the purpose to connect grafana with the config, so the user can add and remove buses and stops. The middleware have also the role to join data from influx with static data from the json configuration### Node red
+The middleware is an api with the purpose to connect grafana with the config, so the user can add and remove buses and stops. The middleware have also the role to join data from influx with static data from the json configuration
+
+
+### Node red
 in node red are defined 3 environment variables:
 - MQTT_USERNAME
 - MQTT_PASSWORD
@@ -125,11 +129,11 @@ They're used in the nodes using the following format: ${ENVIRONMENT_VARIABLE}
 
 They're used respectively for authentication towards the mqtt broker from which to get and process data, and for authentication towards InfluxDB, where the data is forwarded and stored.
 
-NodeRed have the role of joining all MQTT topics in two differents Json, one for buses and one for stops, and send this datas to influxDB
+NodeRed have the role of a data ingestor, joining all MQTT topics in two differents Json, one for buses and one for stops, and send this datas to influxDB
 
 ### InfluxDB
 
-The data is stored in the bucket called `smart`, the structure of the data is as follows:
+The data is stored in the bucket called `smart`, the correct way to visualize the structure of the data is as follows:
 ```
 smart (bucket)
 │
@@ -156,7 +160,7 @@ smart (bucket)
 Grafana is used for hosting the dashboards for visualizing the data simulated and collected through the previous layers, 3 dashboards are created:
 
 - **Buses Dashboard**: For visualize only the infos about buses, and also add and remove a bus
-- **Data and general dashboard**: For visualizing an overview of both stops and buses, there's a map displaying their position
+- **Data and general dashboard**: For visualizing an overview of both stops and buses, there's a map displaying their position, there also gaudges to display median values of all sensors, display the genereted alerts and also tables to display various info about buses and stops
 - **Stops Dashboard**: For visualize only the infos about stops, and also add and remove a stops
 
 **Used Plugins:**
@@ -167,13 +171,3 @@ Grafana is used for hosting the dashboards for visualizing the data simulated an
 The alerting system is implemented by grafana alert rules, the system send a telegram and email message to defined users, in particular:
 - the alert system send a message if the quantity of people inside a bus is near the maximum capacity of a bus
 - the alert system send a message if a bus have a failure
-
-## Problems
-### network ports binding fail:
-This solution helped me (run as administrator your terminal):
-
-net stop winnat
-docker start container_name
-net start winnat
-UPDATE: WinNAT (Windows Network Address Translation) is a windows operating system service. It helps in translating private network addresses into a public address. So, such conflicts in ports for docker can be solved by restarting that service.
-(https://stackoverflow.com/a/66198584)
