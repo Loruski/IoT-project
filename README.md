@@ -153,7 +153,20 @@ smart (bucket)
 
 ### Grafana
 
+Grafana is used for hosting the dashboards for visualizing the data simulated and collected through the previous layers, 3 dashboards are created:
+
+- **Buses Dashboard**: For visualize only the infos about buses, and also add and remove a bus
+- **Data and general dashboard**: For visualizing an overview of both stops and buses, there's a map displaying their position
+- **Stops Dashboard**: For visualize only the infos about stops, and also add and remove a stops
+
+**Used Plugins:**
+- **yesoreyeram-infinity-datasource**: To create a REST API to middleware api
+- **volkovlabs-form-panel**: To create forms to add and delete buses and stops
+
 ## Alerting System
+The alerting system is implemented by grafana alert rules, the system send a telegram and email message to defined users, in particular:
+- the alert system send a message if the quantity of people inside a bus is near the maximum capacity of a bus
+- the alert system send a message if a bus have a failure
 
 ## Problems
 ### network ports binding fail:
