@@ -11,6 +11,7 @@
 ![Grafana](https://img.shields.io/badge/Grafana-Dashboard-F46800?logo=grafana&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Containers-2496ED?logo=docker&logoColor=white)
 ![Docker%20Compose](https://img.shields.io/badge/Docker%20Compose-Orchestration-1D63ED?logo=docker&logoColor=white)
+![Paho](https://img.shields.io/badge/Paho-MQTT-660066?logo=mqtt&logoColor=white)
 
 
 **Team Members:**
