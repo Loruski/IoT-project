@@ -430,8 +430,8 @@
     "node-red-contrib-influxdb": {
         "name": "node-red-contrib-influxdb",
         "version": "0.7.0",
-        "local": true,
-        "user": true,
+        "local": false,
+        "user": false,
         "nodes": {
             "influxdb": {
                 "name": "influxdb",
@@ -442,16 +442,16 @@
                     "influxdb in"
                 ],
                 "enabled": true,
-                "local": true,
+                "local": false,
                 "user": false,
                 "module": "node-red-contrib-influxdb",
-                "file": "/data/node_modules/node-red-contrib-influxdb/influxdb.js"
+                "file": "/usr/src/node-red/node_modules/node-red-contrib-influxdb/influxdb.js"
             }
         }
     },
     "node-red-contrib-telegrambot": {
         "name": "node-red-contrib-telegrambot",
-        "version": "17.1.0",
+        "version": "17.1.2",
         "local": false,
         "user": false,
         "nodes": {
@@ -510,63 +510,6 @@
                 "user": false,
                 "module": "node-red-contrib-wait-paths",
                 "file": "/data/node_modules/node-red-contrib-wait-paths/wait-paths.js"
-            }
-        }
-    },
-    "node-red-contrib-join-wait": {
-        "name": "node-red-contrib-join-wait",
-        "version": "0.5.3",
-        "local": true,
-        "user": false,
-        "nodes": {
-            "join-wait": {
-                "name": "join-wait",
-                "types": [
-                    "join-wait"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "node-red-contrib-join-wait",
-                "file": "/data/node_modules/node-red-contrib-join-wait/join-wait.js"
-            }
-        }
-    },
-    "node-red-contrib-merge": {
-        "name": "node-red-contrib-merge",
-        "version": "0.1.1",
-        "local": true,
-        "user": false,
-        "nodes": {
-            "merge": {
-                "name": "merge",
-                "types": [
-                    "merge"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "node-red-contrib-merge",
-                "file": "/data/node_modules/node-red-contrib-merge/17-merge.js"
-            }
-        }
-    },
-    "node-red-contrib-merge-topic": {
-        "name": "node-red-contrib-merge-topic",
-        "version": "0.1.2",
-        "local": true,
-        "user": false,
-        "nodes": {
-            "merge": {
-                "name": "merge",
-                "types": [
-                    "mergeTopic"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "node-red-contrib-merge-topic",
-                "file": "/data/node_modules/node-red-contrib-merge-topic/17-merge.js"
             }
         }
     },

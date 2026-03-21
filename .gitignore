@@ -7,3 +7,4 @@ smart-bus-system/mosquitto/data
 node_modules
 __pycache__
 .npm
+smart-bus-system/grafana/data

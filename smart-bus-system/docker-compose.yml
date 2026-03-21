@@ -118,6 +118,9 @@ services:
 
   grafana:
     image: grafana/grafana
+    # build:
+    #   context: ./grafana/
+    #   dockerfile: Dockerfile
     container_name: grafana
     restart: always
     depends_on:
@@ -135,10 +138,13 @@ services:
       - GF_SMTP_FROM_ADDRESS=${MAIL_LOGIN}
       - GF_SMTP_FROM_NAME=SmartBusSystem
       - GF_SMTP_STARTTLS_POLICY=MandatoryStartTLS
+      - GF_PROVISIONING_ENABLED=true
     ports:
       - 3000:3000
     volumes:
-      - ./grafana:/var/lib/grafana
+      # - ./grafana/data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+
     networks:
       smart-bus-system-network:
         ipv4_address: ${NETWORK}.50 

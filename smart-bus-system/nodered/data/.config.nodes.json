@@ -430,8 +430,8 @@
     "node-red-contrib-influxdb": {
         "name": "node-red-contrib-influxdb",
         "version": "0.7.0",
-        "local": true,
-        "user": true,
+        "local": false,
+        "user": false,
         "nodes": {
             "influxdb": {
                 "name": "influxdb",
@@ -442,16 +442,16 @@
                     "influxdb in"
                 ],
                 "enabled": true,
-                "local": true,
+                "local": false,
                 "user": false,
                 "module": "node-red-contrib-influxdb",
-                "file": "/data/node_modules/node-red-contrib-influxdb/influxdb.js"
+                "file": "/usr/src/node-red/node_modules/node-red-contrib-influxdb/influxdb.js"
             }
         }
     },
     "node-red-contrib-telegrambot": {
         "name": "node-red-contrib-telegrambot",
-        "version": "17.1.0",
+        "version": "17.1.2",
         "local": false,
         "user": false,
         "nodes": {
@@ -471,75 +471,6 @@
                 "user": false,
                 "module": "node-red-contrib-telegrambot",
                 "file": "/usr/src/node-red/node_modules/node-red-contrib-telegrambot/telegrambot/99-telegrambot.js"
-            }
-        }
-    },
-    "@emuanalytics/node-red-contrib-flow-ingest": {
-        "name": "@emuanalytics/node-red-contrib-flow-ingest",
-        "version": "0.0.4",
-        "local": true,
-        "user": true,
-        "nodes": {
-            "flow-ingest": {
-                "name": "flow-ingest",
-                "types": [
-                    "flow ingest",
-                    "flow-mqtt-broker"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "@emuanalytics/node-red-contrib-flow-ingest",
-                "file": "/data/node_modules/@emuanalytics/node-red-contrib-flow-ingest/flow-ingest.js"
-            }
-        }
-    },
-    "node-red-contrib-wait-paths": {
-        "name": "node-red-contrib-wait-paths",
-        "version": "0.3.2",
-        "local": true,
-        "user": true,
-        "nodes": {
-            "wait-paths": {
-                "name": "wait-paths",
-                "types": [
-                    "wait-paths"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "node-red-contrib-wait-paths",
-                "file": "/data/node_modules/node-red-contrib-wait-paths/wait-paths.js"
-            }
-        }
-    },
-    "openapi-red": {
-        "name": "openapi-red",
-        "version": "2.8.0",
-        "local": true,
-        "user": true,
-        "nodes": {
-            "openApi-red": {
-                "name": "openApi-red",
-                "types": [
-                    "openApi-red"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "openapi-red",
-                "file": "/data/node_modules/openapi-red/src/openapi.js"
-            },
-            "openApi-red-url": {
-                "name": "openApi-red-url",
-                "types": [
-                    "openApi-red-url"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "openapi-red",
-                "file": "/data/node_modules/openapi-red/src/config.js"
             }
         }
     }

@@ -1,0 +1,155 @@
+apiVersion: 1
+groups:
+    - orgId: 1
+      name: 'Bus '
+      folder: Bus status
+      interval: 1m
+      rules:
+        - uid: affn3hebyg2rkc
+          title: Bus status alert
+          condition: B
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: infinity_sbs_api
+              model:
+                columns:
+                    - selector: status
+                      text: stato
+                      type: string
+                    - selector: ""
+                      text: time
+                      type: timestamp
+                    - selector: id
+                      text: id
+                      type: string
+                computed_columns:
+                    - selector: 'stato == ''OK'' ? 0 : 1'
+                      text: is_error
+                      type: string
+                filterExpression: ""
+                filters: []
+                format: timeseries
+                global_query_id: ""
+                intervalMs: 1000
+                maxDataPoints: 43200
+                pagination_mode: none
+                parser: backend
+                refId: A
+                root_selector: ""
+                source: url
+                type: json
+                uql: "parse-json\r\n| project \"timestamp\", \"level\"\r\n| extend \"is_error\"=if(\"level\" == 'Error', 1, 0)"
+                url: http://21.0.0.11:5000/getBuses
+                url_options:
+                    data: ""
+                    method: GET
+            - refId: B
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params: []
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params: []
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: last
+                refId: B
+                type: reduce
+          noDataState: NoData
+          execErrState: Error
+          annotations:
+            summary: 'The bus {{ $labels.id }} is in the current state: {{ $labels.stato }}'
+          isPaused: false
+          notification_settings:
+            receiver: empty
+    - orgId: 1
+      name: 'Bus '
+      folder: Bus Capacity
+      interval: 1m
+      rules:
+        - uid: affn72zu5jldsc
+          title: Bus crowded
+          condition: B
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: infinity_sbs_api
+              model:
+                columns:
+                    - selector: ""
+                      text: time
+                      type: timestamp
+                    - selector: is_full
+                      text: is_full
+                      type: number
+                    - selector: id
+                      text: id
+                      type: string
+                computed_columns: []
+                filterExpression: ""
+                filters: []
+                format: timeseries
+                global_query_id: ""
+                intervalMs: 1000
+                maxDataPoints: 43200
+                parser: backend
+                refId: A
+                root_selector: '$.({"id": id, "is_full": people > (capacity - 5) ? 1 : 0})'
+                source: url
+                type: json
+                uql: "parse-json\r\n| extend \"time\"=now()\r\n| extend \"full_bus\"=if(to_number(\"people\") > (to_number(\"capacity\") - 5), 1, 0)\r\n| project \"time\", \"id\", \"full_bus\""
+                url: http://21.0.0.11:5000/getBuses
+                url_options:
+                    data: ""
+                    method: GET
+            - refId: B
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0
+                            - 0
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params: []
+                      reducer:
+                        params: []
+                        type: avg
+                      type: query
+                datasource:
+                    name: Expression
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: last
+                refId: B
+                type: reduce
+          noDataState: NoData
+          execErrState: Error
+          annotations:
+            summary: The bus {{ $labels.id }} can be crowded
+          isPaused: false
+          notification_settings:
+            receiver: empty

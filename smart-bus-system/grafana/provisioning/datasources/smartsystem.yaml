@@ -1,0 +1,12 @@
+apiVersion: 1
+datasources:
+  - name: Infinity API # Il nome che vedrai su Grafana
+    type: yesoreyeram-infinity-datasource # Il codice esatto del plugin
+    uid: infinity_sbs_api # ID univoco importantissimo (leggi sotto)
+    access: proxy
+    # url: http://grafana-middleware-api:5000 # L'indirizzo del tuo container API
+    isDefault: true
+    editable: true
+    jsonData:
+      # Qui puoi aggiungere configurazioni specifiche di Infinity se ti servono
+      # (es. autenticazione, header personalizzati), altrimenti lascialo così.
