@@ -55,7 +55,9 @@ The system is composed of independent Dockerized services connected through a pr
 
 ## System Architecture
 
-### High-level data flow
+### High-level data flow and components
+
+The arrow direction indicate how the flow is directed, for example, `Middleware Api` read datas from `Influxdb`
 
 ```
 Sensors --> MQTT --> Node-RED --> InfluxDB
@@ -65,9 +67,13 @@ Sensors --> MQTT --> Node-RED --> InfluxDB
 Config API <------------------> Middleware API <--> Grafana
 ```
 
+![](./img/IOT_arch.png)
+
 ### Components and responsibilities
 
 #### Config API
+>Technology used: Python, Flask, JSON file persistence.
+
 Python Flask service exposing endpoints to read and modify the JSON configuration.
 
 Main endpoints:
@@ -87,8 +93,13 @@ Used by:
 ---
 
 #### Sensors Simulator
+
+> Technology used: Python MQTT publish messaging with paho client.
+
 - Simulates values for buses and stops.
 - Sends values to MQTT topics.
+
+
 
 Bus sensors publish:
 - Bus status
@@ -123,9 +134,14 @@ Topics structure:
 ---
 
 #### Mosquitto
+
+>Technology used: Eclipse Mosquitto MQTT broker.
+
 Mosquitto hosts the MQTT broker and enforces authentication through:
 - `mosquitto/config/mosquitto.conf`
 - `password_file /mosquitto/config/mosquitto.passwd`
+
+
 
 The password file is generated at image build time:
 
@@ -177,6 +193,9 @@ smart (bucket)
 ---
 
 #### Middleware API
+
+>Technology used: Python, Flask, InfluxDB Python client, HTTP REST integration
+
 The Middleware API is a Flask service that acts as an orchestration layer between Grafana, Config API, and InfluxDB.
 
 It is designed to keep Grafana simple: dashboards call one REST layer that already contains both static metadata (from configuration) and live telemetry (from time-series storage).
