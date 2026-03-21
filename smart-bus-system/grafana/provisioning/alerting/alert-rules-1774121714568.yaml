@@ -3,7 +3,7 @@ groups:
     - orgId: 1
       name: 'Bus '
       folder: Bus status
-      interval: 1m
+      interval: 10s
       rules:
         - uid: affn3hebyg2rkc
           title: Bus status alert
@@ -80,7 +80,7 @@ groups:
     - orgId: 1
       name: 'Bus '
       folder: Bus Capacity
-      interval: 1m
+      interval: 10s
       rules:
         - uid: affn72zu5jldsc
           title: Bus crowded
