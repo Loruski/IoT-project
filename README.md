@@ -377,12 +377,11 @@ Current alert cases:
 - Bus occupancy near maximum capacity.
 - Bus status reports a failure.
 
-Notifications are sent to configured recipients using Grafana contact points.
-
 >Alert Mail
 >
->![](./img/mail.png)
+><img src="./img/mail.png" alt="drawing" width="200"/>
+
 
 >Telegram Alert Bot
 >
->![](./img/telegram.png)
+> <img src="./img/telegram.png" alt="drawing" width="200"/>
