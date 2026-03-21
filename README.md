@@ -47,7 +47,7 @@ Smart Bus System is an IoT project that simulates a fleet of buses and bus stops
 The goal is to provide both:
 - Real-time monitoring of buses and stops
 - Operational controls to add/remove buses and stops from a web dashboard
-- Alerting for critical transport events
+- Alerting for critical transport and remote events
 
 ## System Description
 
@@ -93,7 +93,7 @@ The system is composed of independent Dockerized services connected through a pr
 
 ### High-level data flow and components
 
-The arrow direction indicate how the flow is directed, for example, `Middleware Api` read datas from `Influxdb`
+The arrow direction indicate how the flow is directed, for example, `Middleware Api` read data from `Influxdb`
 
 ```
 Sensors --> MQTT --> Node-RED --> InfluxDB
@@ -110,7 +110,7 @@ Config API <------------------> Middleware API <--> Grafana
 #### Config API
 >Technology used: Python, Flask, JSON file persistence.
 
-Python Flask service exposing endpoints to read and modify the JSON configuration.
+The Python Flask library is used for exposing endpoints to read and modify the JSON configuration.
 
 Main endpoints:
 - `GET /config`
@@ -207,23 +207,23 @@ Telemetry is stored in bucket `smart`.
 Logical structure:
 ```
 smart (bucket)
-|
-|---autobus
-|   |---B1
-|   |   |--- current_capacity
-|   |   |--- current_stop
-|   |   \--- status
-|   |---B2
-|   |   \--- ...
-|   \--- ...
-\---busStop
-    |---Stop1
-    |   |--- people
-    |   |--- rain
-    |   \--- temp
-    |---Stop2
-    |   \--- ...
-    \--- ...
+│
+└───autobus
+│   └───B1
+│   │   │─── current_capacity
+│   │   │─── current_stop
+│   │   └─── status
+│   └───B2
+│   │   └─── ...
+│   └─── ...
+└───busStop
+    └───Stop1
+    │   │─── people
+    │   │─── rain
+    │   └─── temp
+    └───Stop2
+    │   └─── ...
+    └─── ...
 ```
 
 ---
@@ -259,7 +259,7 @@ Data enrichment behavior:
   - Static fields: `id`, `name`, `lat`, `lon`
   - Live fields: `people`, `rain`, `temp`
 
-What this layer do:
+What this layer does:
 - Decouples Grafana from direct database and multi-service logic.
 - Centralizes the integration logic in one service.
 
@@ -324,6 +324,7 @@ Main exposed ports:
 - `5001` Config API
 - `5000` Middleware API
 
+Node-red, Influxdb, Grafana web GUIs are available by navigating to `localhost:[port]`
 
 ### Config file
 A configuration JSON file is required for the simulator and for runtime management operations.
@@ -361,12 +362,6 @@ Structure:
   ]
 }
 ```
-
-Field notes:
-- `city_params.rain_factor`: controls how likely rain appears in simulation.
-- `city_params.global_temp`: baseline temperature used by temperature generation.
-- `buses[].route`: ordered list of stop IDs; when the last stop is reached, route loops from the first.
-- `buses[].capacity`: max passenger capacity used by simulation and alerts.
 
 
 ## Alerting System
