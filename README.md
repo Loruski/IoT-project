@@ -1,8 +1,43 @@
-# Smart Bus System
 
-Team Members:
+
+# Smart Bus System  
+
+![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-API-000000?logo=flask&logoColor=white)
+![MQTT](https://img.shields.io/badge/MQTT-Protocol-660066?logo=mqtt&logoColor=white)
+![Mosquitto](https://img.shields.io/badge/Mosquitto-Broker-3C5280?logo=eclipsemosquitto&logoColor=white)
+![Node--RED](https://img.shields.io/badge/Node--RED-Flow%20Engine-8F0000?logo=nodered&logoColor=white)
+![InfluxDB](https://img.shields.io/badge/InfluxDB-Time%20Series-22ADF6?logo=influxdb&logoColor=white)
+![Grafana](https://img.shields.io/badge/Grafana-Dashboard-F46800?logo=grafana&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Containers-2496ED?logo=docker&logoColor=white)
+![Docker%20Compose](https://img.shields.io/badge/Docker%20Compose-Orchestration-1D63ED?logo=docker&logoColor=white)
+
+
+**Team Members:**
 - Giacomo Paolocci
 - Raffaele Lorusso
+
+
+## Table of Contents
+- [Introduction](#introduction)
+- [System Description](#system-description)
+- [Functional Requirements](#functional-requirements)
+- [Non functional Requirements](#non-functional-requirements)
+- [System Architecture](#system-architecture)
+  - [High-level data flow and components](#high-level-data-flow-and-components)
+  - [Components and responsibilities](#components-and-responsibilities)
+    - [Config API](#config-api)
+    - [Sensors Simulator](#sensors-simulator)
+    - [Mosquitto](#mosquitto)
+    - [Node-RED](#node-red)
+    - [InfluxDB](#influxdb)
+    - [Middleware API](#middleware-api)
+    - [Grafana](#grafana)
+- [Docker Configuration](#docker-configuration)
+  - [Initial configuration](#initial-configuration)
+  - [Run the stack](#run-the-stack)
+  - [Config file](#config-file)
+- [Alerting System](#alerting-system)
 
 ## Introduction
 
@@ -241,6 +276,18 @@ Used plugins:
 - **yesoreyeram-infinity-datasource**: REST integration with middleware API.
 - **volkovlabs-form-panel**: forms to add/delete buses and stops.
 
+> General Visualization
+>
+> ![](./img/grafanaAll.png)
+
+> Dashboard for managing Buses
+>
+> ![](./img/grafanaBus.png)
+
+> Dashboard for managing Stops
+>
+> ![](./img/grafanaStop.png)
+
 ## Docker Configuration
 
 ### Initial configuration
@@ -330,3 +377,11 @@ Current alert cases:
 - Bus status reports a failure.
 
 Notifications are sent to configured recipients using Grafana contact points.
+
+>Alert Mail
+>
+>![](./img/mail.png)
+
+>Telegram Alert Bot
+>
+>![](./img/telegram.png)
