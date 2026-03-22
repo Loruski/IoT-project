@@ -76,7 +76,7 @@ groups:
             summary: 'The bus {{ $labels.id }} is in the current state: {{ $labels.stato }}'
           isPaused: false
           notification_settings:
-            receiver: empty
+            receiver: "Telegram Bot"
     - orgId: 1
       name: 'Bus '
       folder: Bus Capacity

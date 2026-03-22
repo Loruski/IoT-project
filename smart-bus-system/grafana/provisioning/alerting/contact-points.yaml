@@ -1,0 +1,24 @@
+apiVersion: 1
+contactPoints:
+    - orgId: 1
+      name: Telegram Bot
+      receivers:
+        - uid: cffnb4lu46ccgc
+          type: email
+          settings:
+            addresses: mail@test.com
+            message: 'Alert Details {{ range .Alerts }} Bus ID: {{ .Labels.id }} Message: {{ .Annotations.summary }} Ora: {{ .StartsAt.Format "15:04:05" }} -----------------------  {{ end }}'
+            singleEmail: false
+            subject: 'bus alert'
+          disableResolveMessage: false
+        - uid: effn9t84ga3ggd
+          type: telegram
+          settings:
+            bottoken: 123456:ABC-DEF1234ghIkl
+            chatid: "123456789"
+            disable_notification: false
+            disable_web_page_preview: false
+            message: '{{ range .Alerts }}    {{ .Annotations.summary }}  {{ end }}'
+            parse_mode: None
+            protect_content: false
+          disableResolveMessage: false
