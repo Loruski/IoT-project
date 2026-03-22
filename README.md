@@ -39,6 +39,8 @@
   - [Run the stack](#run-the-stack)
   - [Config file](#config-file)
 - [Alerting System](#alerting-system)
+  - [Alerting configuration](#alerting-configuration)
+
 
 ## Introduction
 
@@ -363,6 +365,14 @@ Structure:
 }
 ```
 
+### Grafana configuration
+To save dashboard, alerts, and data source configuration, we use Grafana provisioning.
+Provisioning allows us to define data sources and dashboards as code, which are automatically loaded when the Grafana container starts.
+- Data source configuration: `smart-bus-system/grafana/provisioning/datasources/datasource.yaml`
+- Dashboard configuration: `smart-bus-system/grafana/provisioning/dashboards/dashboard.yaml`
+- Alert and contact points configuration: `smart-bus-system/grafana/provisioning/alerting/`
+
+Notice that inside the file `contact-points.yaml` the email address and the Telegram bot chat ID and Token have to be defined
 
 ## Alerting System
 
@@ -380,3 +390,11 @@ Current alert cases:
 >Telegram Alert Bot
 >
 > <img src="./img/telegram.png" alt="drawing" width="200"/>
+
+### Alerting configuration
+To change the Mail provider see inside the doker compose, in particular in `grafana` service, the environment variables:
+```yaml
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_HOST=smtp.mailersend.net:587
+```
+and also modify the .env file with the correct credentials

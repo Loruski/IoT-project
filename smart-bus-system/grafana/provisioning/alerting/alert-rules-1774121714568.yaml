@@ -152,4 +152,4 @@ groups:
             summary: The bus {{ $labels.id }} can be crowded
           isPaused: false
           notification_settings:
-            receiver: empty
+            receiver: "Telegram Bot"
